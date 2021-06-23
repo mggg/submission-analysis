@@ -4,12 +4,13 @@ import matplotlib.pyplot as plt
 import us
 
 # lookup for mggg-states shapefile raw links
+# lookup for mggg-states shapefile raw links
 mggg_states = {
     'Ohio': 'https://github.com/mggg-states/OH-shapefiles/blob/master/OH_precincts.zip?raw=true',
     'Alaska': 'https://github.com/mggg-states/AK-shapefiles/blob/master/AK_precincts.zip?raw=true',
     'Michigan': 'https://github.com/mggg-states/MI-shapefiles/blob/main/MI.zip?raw=true',
-    'Wisconsin20': 'https://github.com/mggg-states/WI-shapefiles/blob/master/WI_2020_wards.zip?raw=true',
-    'Wisconsin': 'https://github.com/mggg-states/WI-shapefiles/blob/master/WI_2011_wards.zip?raw=true',
+    'Wisconsin': 'https://github.com/mggg-states/WI-shapefiles/blob/master/WI_2020_wards.zip?raw=true',
+    'Wisconsin10': 'https://github.com/mggg-states/WI-shapefiles/blob/master/WI_2011_wards.zip?raw=true',
     'Maryland': 'https://github.com/mggg-states/MD-shapefiles/blob/master/MD_precincts.zip?raw=true',
     'North Carolina': 'https://github.com/mggg-states/NC-shapefiles/blob/master/NC_VTD.zip?raw=true',
     'New Hampshire': 'https://github.com/mggg-states/NH-shapefiles/blob/main/NH.zip?raw=true',
@@ -40,6 +41,7 @@ mggg_states = {
 }
 
 # takes in an assignment df (coi_df from fetch) and spits it out with geometries
+# takes in an assignment df and spits it out with geometries
 def assignment_to_shape(df):
     # add a units row to the df
     crs = None
@@ -57,10 +59,7 @@ def assignment_to_shape(df):
         elif unit == "blocks":
             link = f'https://www2.census.gov/geo/pvs/tiger2010st/{fips}_{state}/{fips}/tl_2010_{fips}_tabblock10.zip'
         else:
-            if state == 'Wisconsin' and unit == '2020 Wards':
-                link = mggg_states['Wisconsin20']
-            else:
-                link = mggg_states[state]
+            link = mggg_states[state]
         shp = gpd.read_file(link)
         print("Have shapefile.")
 
@@ -73,16 +72,25 @@ def assignment_to_shape(df):
 
         subset = df[df['units'] == unit]
         print(f'{len(subset)} submissions using {unit}\n')
+        
         # each COI is a row
         for idx, row in subset.iterrows():
             # get all info
             plan_id = row['plan_id']
             key = row['districtr_data']['plan']['idColumn']['key']
+            if state == "Wisconsin" and key == "GEOID10" and unit == "wards":
+                print("Skipping a plan because it is on old WI wards")
+                continue
+                
+            # cast everything to int
+            shp[key] = shp[key].apply(int)
+            
             try:
                 asn = row['districtr_data']['plan']['assignment']
             except KeyError: # empty plan
                 print("Empty plan...")
                 continue
+
             # make lists
             ids = []
             plan_ids = []
@@ -90,6 +98,8 @@ def assignment_to_shape(df):
             tile_ids = []
             geoms = []
             for k, v in asn.items():
+                # cast everything to int
+                k = int(k)
                 if isinstance(v, list):
                     for v_prime in v:
                         ids.append(f'{plan_id}-{v_prime}')
@@ -102,12 +112,12 @@ def assignment_to_shape(df):
                     plan_ids.append(plan_id)
                     coi_ids.append(v)
                     tile_ids.append(k)
-                    geoms.append(shp[shp[key] == k]['geometry'].iloc[0])
+                    geoms.append(shp[shp[key] == int(k)]['geometry'].iloc[0])
             tmp = pd.DataFrame(zip(ids, plan_ids, coi_ids, tile_ids, geoms), 
                                columns = ['id', 'plan_id', 'coi_id', 'tile_id', 'geometry'])
             acc = acc.append(tmp, ignore_index = True)
     return gpd.GeoDataFrame(acc, crs = crs)
-        
+               
 # in these, clip_bounds can either be a capitalized state name or a geometry to clip to
 def plot_coi_boundaries(coi_df, clip_bounds):
     if isinstance(clip_bounds, str):
