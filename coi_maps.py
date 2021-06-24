@@ -122,7 +122,8 @@ def assignment_to_shape(df):
 def plot_coi_boundaries(coi_df, clip_bounds):
     if isinstance(clip_bounds, str):
         state_gdf = gpd.read_file('https://www2.census.gov/geo/tiger/GENZ2018/shp/cb_2018_us_state_5m.zip')
-        clip_bounds = state_gdf[state_gdf['NAME'] == clip_bounds].to_crs(coi_df.crs)
+        clip_bounds = state_gdf[state_gdf['NAME'] == clip_bounds]
+    clip_bounds = clip_bounds.to_crs(coi_df.crs)
     clipped = gpd.clip(coi_df, clip_bounds)
     fig, ax = plt.subplots(figsize = (20,10))
     dissolved = gpd.clip(coi_df.dissolve(by = 'id'), clip_bounds)
@@ -135,7 +136,8 @@ def plot_coi_boundaries(coi_df, clip_bounds):
 def plot_coi_heatmap(coi_df, clip_bounds, color = 'purple'):
     if isinstance(clip_bounds, str):
         state_gdf = gpd.read_file('https://www2.census.gov/geo/tiger/GENZ2018/shp/cb_2018_us_state_5m.zip')
-        clip_bounds = state_gdf[state_gdf['NAME'] == clip_bounds].to_crs(coi_df.crs)
+        clip_bounds = state_gdf[state_gdf['NAME'] == clip_bounds]
+    clip_bounds = clip_bounds.to_crs(coi_df.crs)
     clipped = gpd.clip(coi_df, clip_bounds)
     fig, ax = plt.subplots(figsize = (20,10))
     ax.set_axis_off()
