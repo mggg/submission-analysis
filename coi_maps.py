@@ -2,6 +2,7 @@ import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import us
+import contextily as ctx
 
 # lookup for mggg-states shapefile raw links
 # lookup for mggg-states shapefile raw links
@@ -119,7 +120,7 @@ def assignment_to_shape(df):
     return gpd.GeoDataFrame(acc, crs = crs)
                
 # in these, clip_bounds can either be a capitalized state name or a geometry to clip to
-def plot_coi_boundaries(coi_df, clip_bounds, osm = False):
+def plot_coi_boundaries(coi_df, clip_bounds, osm = False, outfile = None):
     if isinstance(clip_bounds, str):
         state_gdf = gpd.read_file('https://www2.census.gov/geo/tiger/GENZ2018/shp/cb_2018_us_state_5m.zip')
         clip_bounds = state_gdf[state_gdf['NAME'] == clip_bounds]
@@ -136,10 +137,12 @@ def plot_coi_boundaries(coi_df, clip_bounds, osm = False):
     clipped.plot(ax = ax, column = 'id', cmap = 'tab20', alpha = 0.5)
     clip_bounds.boundary.plot(ax = ax, color = 'black', linewidth = 2)
     if osm:
-        ctx.add_basemap(ax)
+        ctx.add_basemap(ax, alpha = 0.5)
+    if outfile:
+        plt.savefig(outfile)
     plt.show()
     
-def plot_coi_heatmap(coi_df, clip_bounds, color = 'purple', osm = False):
+def plot_coi_heatmap(coi_df, clip_bounds, color = 'purple', osm = False, outfile = None):
     if isinstance(clip_bounds, str):
         state_gdf = gpd.read_file('https://www2.census.gov/geo/tiger/GENZ2018/shp/cb_2018_us_state_5m.zip')
         clip_bounds = state_gdf[state_gdf['NAME'] == clip_bounds]
@@ -154,5 +157,7 @@ def plot_coi_heatmap(coi_df, clip_bounds, color = 'purple', osm = False):
     clip_bounds.boundary.plot(ax = ax, color = 'black', linewidth = 2)
     clipped.plot(ax = ax, color = color, alpha = 0.2)
     if osm:
-        ctx.add_basemap(ax)
+        ctx.add_basemap(ax, alpha = 0.5)
+    if outfile:
+        plt.savefig(outfile)
     plt.show()
