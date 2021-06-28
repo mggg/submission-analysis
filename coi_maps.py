@@ -47,7 +47,12 @@ def assignment_to_shape(df):
     # add a units row to the df
     crs = None
     df['units'] = df['districtr_data'].apply(lambda x: x['plan']['units']['id'])
-    state = df.iloc[0]['districtr_data']['plan']['place']['state']
+    try:
+        state = df.iloc[0]['districtr_data']['plan']['place']['state']
+    except:
+        print(f"ERROR: {len(df)} COI SUBMISSIONS")
+        return None
+    
     fips = us.states.lookup(state).fips
     
     acc = pd.DataFrame(columns = ['id', 'plan_id', 'coi_id', 'tile_id', 'geometry'])
@@ -83,9 +88,21 @@ def assignment_to_shape(df):
                 print("Skipping a plan because it is on old WI wards")
                 continue
                 
-            # cast everything to int
-            shp[key] = shp[key].apply(int)
-            
+            # cast everything to int (and do some error checking)
+            try:
+                shp[key] = shp[key].apply(int)
+            except KeyError:
+                if key == "GEOID":
+                    try:
+                        key = "GEOID10"
+                        shp[key] = shp[key].apply(int)
+                    except KeyError:
+                        print("ERROR: GEOID and GEOID10 not in shapefile.")
+                        continue
+                else:
+                    print(f"ERROR: {key} not in shapefile.")
+                    continue
+                
             try:
                 asn = row['districtr_data']['plan']['assignment']
             except KeyError: # empty plan
@@ -120,7 +137,7 @@ def assignment_to_shape(df):
     return gpd.GeoDataFrame(acc, crs = crs)
                
 # in these, clip_bounds can either be a capitalized state name or a geometry to clip to
-def plot_coi_boundaries(coi_df, clip_bounds, osm = False, outfile = None):
+def plot_coi_boundaries(coi_df, clip_bounds, osm = False, outfile = None, show = True):
     if isinstance(clip_bounds, str):
         state_gdf = gpd.read_file('https://www2.census.gov/geo/tiger/GENZ2018/shp/cb_2018_us_state_5m.zip')
         clip_bounds = state_gdf[state_gdf['NAME'] == clip_bounds]
@@ -140,9 +157,11 @@ def plot_coi_boundaries(coi_df, clip_bounds, osm = False, outfile = None):
         ctx.add_basemap(ax, alpha = 0.5)
     if outfile:
         plt.savefig(outfile)
-    plt.show()
+    if show:
+        plt.show()
+    plt.close()
     
-def plot_coi_heatmap(coi_df, clip_bounds, color = 'purple', osm = False, outfile = None):
+def plot_coi_heatmap(coi_df, clip_bounds, color = 'purple', osm = False, outfile = None, show = True):
     if isinstance(clip_bounds, str):
         state_gdf = gpd.read_file('https://www2.census.gov/geo/tiger/GENZ2018/shp/cb_2018_us_state_5m.zip')
         clip_bounds = state_gdf[state_gdf['NAME'] == clip_bounds]
@@ -160,4 +179,6 @@ def plot_coi_heatmap(coi_df, clip_bounds, color = 'purple', osm = False, outfile
         ctx.add_basemap(ax, alpha = 0.5)
     if outfile:
         plt.savefig(outfile)
-    plt.show()
+    if show:
+        plt.show()
+    plt.close()
