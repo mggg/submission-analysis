@@ -10,14 +10,14 @@ import pandas as pd
 import datetime
 
 to_draw = {
-    # "Michigan": ('statewide', 'test/michigan_test'), ## NOT WORKING
+    "Michigan": ('statewide', 'test/michigan_test'), ## NOT WORKING
     # "Missouri": [('statewide', 'test/missouri_test'), ('../shp_test/stlouis/St_Louis_square.shp', 'test/stlouis_test')],
     # "Ohio": ('statewide', 'test/ohio_test2'),
     # "New Mexico": ('statewide', 'test/newmexico_test'), 
     # "Texas": ('statewide', 'test/texas_test'),
     # "Utah": ('statewide', 'test/utah_test'),
     # "Virginia": ('statewide', 'test/virginia_test'), ## NOT WORKING
-    "Wisconsin": ('statewide', 'test/wisconsin_test')
+    # "Wisconsin": ('statewide', 'test/wisconsin_test')
 }
 
 def parse_date(d):
@@ -55,10 +55,11 @@ def create_coi_maps(state, data):
     written = f"https://k61e3cz2ni.execute-api.us-east-2.amazonaws.com/prod/submissions/csv/{link}?type=written&length=10000"
 
     if state == 'Michigan':
-        ids = "https://qp2072772f.execute-api.us-east-2.amazonaws.com/dev/submissions/districtr-ids"
-        plans = "https://o1siz7rw0c.execute-api.us-east-2.amazonaws.com/prod/submissions/csv?type=plan&length=10000"
-        cois = "https://o1siz7rw0c.execute-api.us-east-2.amazonaws.com/prod/submissions/csv?type=coi&length=10000"
-        written = "https://o1siz7rw0c.execute-api.us-east-2.amazonaws.com/prod/submissions/csv?type=written&length=10000"
+        ids = "https://o1siz7rw0c.execute-api.us-east-2.amazonaws.com/beta/submissions/districtr-ids/michigan"
+        csv_url = "https://o1siz7rw0c.execute-api.us-east-2.amazonaws.com/beta/submissions/csv/michigan"
+        plan   = csv_url + "?type=plan&length=10000"
+        cois    = csv_url + "?type=coi&length=10000"
+        written = csv_url + "?type=written&length=10000"
 
 
     
