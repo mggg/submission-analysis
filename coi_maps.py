@@ -102,6 +102,8 @@ def assignment_to_shape(df):
                 else:
                     print(f"ERROR: {key} not in shapefile.")
                     continue
+            except ValueError:
+                shp[key] = shp[key] # can't be turned to an int (not a GEOID)
                 
             try:
                 asn = row['districtr_data']['plan']['assignment']
@@ -117,7 +119,11 @@ def assignment_to_shape(df):
             geoms = []
             for k, v in asn.items():
                 # cast everything to int
-                k = int(k)
+                try:
+                    k = int(k)
+                except ValueError:
+                    k = k # see above)
+                 
                 if isinstance(v, list):
                     for v_prime in v:
                         ids.append(f'{plan_id}-{v_prime}')
@@ -130,7 +136,7 @@ def assignment_to_shape(df):
                     plan_ids.append(plan_id)
                     coi_ids.append(v)
                     tile_ids.append(k)
-                    geoms.append(shp[shp[key] == int(k)]['geometry'].iloc[0])
+                    geoms.append(shp[shp[key] == k]['geometry'].iloc[0])
             tmp = pd.DataFrame(zip(ids, plan_ids, coi_ids, tile_ids, geoms), 
                                columns = ['id', 'plan_id', 'coi_id', 'tile_id', 'geometry'])
             acc = acc.append(tmp, ignore_index = True)
