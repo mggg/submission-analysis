@@ -16,7 +16,7 @@ import os
 ##### THINGS TO CHANGE ######
 to_draw = {
     #"Michigan": ('statewide', 'michigan_test'),
-    "Missouri": [('statewide', 'missouri_test'), ('../shp_test/stlouis/St_Louis_square.shp', 'test/stlouis_test')],
+    "Missouri": [('statewide', 'missouri_test'), ('../shp_test/stlouis/St_Louis_square.shp', 'stlouis_test')],
     #"Ohio": ('statewide', 'ohio_test2'),
     #"New Mexico": ('statewide', 'newmexico_test'), 
     #"Texas": ('statewide', 'texas_test'),
@@ -60,11 +60,11 @@ def create_coi_maps(state, data):
     if not isinstance(cumulative, pd.DataFrame):
         print(f"Done with {state.upper()}\n\n")
         return
-    coi_dataset.assignment_to_pivot(coi_df, f'{today}/lookup_tables/{state}_{today}.csv')
+    coi_dataset.assignment_to_pivot(coi_df, f'lookup_tables/{state}_{today}.csv')
     print("Cumulative Dataset Written")
     
     weekly = coi_df[coi_df['datetime'] > (today - np.timedelta64(1, 'W'))]
-    coi_dataset.assignment_to_pivot(weekly, f'{today}/lookup_tables/{state}_weekly_{today}.csv')
+    coi_dataset.assignment_to_pivot(weekly, f'lookup_tables/{state}_weekly_{today}.csv')
     weekly = coi_maps.assignment_to_shape(weekly)
     print("Weekly Dataset Written")
     
@@ -75,23 +75,28 @@ def create_coi_maps(state, data):
         osm = False
         clip = state
         if geom != "statewide":
-            clip = gpd.read_file(geom)
+            # have to add the .. bc we have cd'd down a directory
+            clip = gpd.read_file(f'../{geom}')
             osm = True
     
-        coi_maps.plot_coi_boundaries(cumulative, clip, osm = osm, outfile = f'{today}/{outfile}_{today}_boundaries.png', show = False)
-        coi_maps.plot_coi_heatmap(cumulative, clip, osm = osm, outfile = f'{today}/{outfile}_{today}_heatmap.png', show = False)
+        coi_maps.plot_coi_boundaries(cumulative, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_{today}_boundaries.png', show = False)
+        coi_maps.plot_coi_heatmap(cumulative, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_{today}_heatmap.png', show = False)
         
-        coi_maps.plot_coi_boundaries(weekly, clip, osm = osm, outfile = f'{today}/{outfile}__weekly{today}_boundaries.png', show = False)
-        coi_maps.plot_coi_heatmap(weekly, clip, osm = osm, outfile = f'{today}/{outfile}_weekly{today}_heatmap.png', show = False)
+        coi_maps.plot_coi_boundaries(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}__weekly{today}_boundaries.png', show = False)
+        coi_maps.plot_coi_heatmap(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_weekly{today}_heatmap.png', show = False)
         
     print(f"Done with {state.upper()}\n\n")
 
 def main():
+    wd = os
     today = str(np.datetime64('today'))
     os.mkdir(today)
+    os.chdir(today)
+    os.mkdir("lookup_tables")
     for s in to_draw.keys():
-        os.mkdir(s.tolower())
+        os.mkdir(s.lower())
         create_coi_maps(s, to_draw[s])
+    os.chdir('..')
 
 if __name__ == "__main__":
     main()
