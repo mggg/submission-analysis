@@ -81,10 +81,12 @@ def create_coi_maps(state, data):
     
         coi_maps.plot_coi_boundaries(cumulative, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_{today}_boundaries.png', show = False, title = title)
         coi_maps.plot_coi_heatmap(cumulative, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_{today}_heatmap.png', show = False, title = title)
-        
-        coi_maps.plot_coi_boundaries(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}__weekly{today}_boundaries.png', show = False, title = title)
-        coi_maps.plot_coi_heatmap(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_weekly{today}_heatmap.png', show = False, title = title)
-        
+        try:
+            coi_maps.plot_coi_boundaries(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}__weekly{today}_boundaries.png', show = False, title = title)
+            coi_maps.plot_coi_heatmap(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_weekly{today}_heatmap.png', show = False, title = title)
+        except AttributeError:
+            print(f"No new COIs in {title} this week.")
+
     print(f"Done with {state.upper()}\n\n")
 
 def main():
