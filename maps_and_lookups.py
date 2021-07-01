@@ -15,14 +15,22 @@ import os
 
 ##### THINGS TO CHANGE ######
 to_draw = {
-    #"Michigan": ('statewide', 'michigan_test', 'Michigan),
-    "Missouri": [('statewide', 'missouri_test', "Missouri"), 
-                ('../shp_test/stlouis/St_Louis_square.shp', 'stlouis_test', "St. Louis")],
-    #"Ohio": ('statewide', 'ohio_test2', 'Ohio),
-    #"New Mexico": ('statewide', 'newmexico_test', "New Mexico"), 
-    #"Texas": ('statewide', 'texas_test', "Texas"),
-    "Utah": ('statewide', 'utah_test', "Utah"),
-    #"Wisconsin": ('statewide', 'wisconsin_test', "Wisconsin")
+    #"Michigan": ('statewide', 'michigan', 'Michigan'),
+    #"Missouri": [('statewide', 'missouri', "Missouri")],
+    "Ohio": [('statewide', 'ohio', 'Ohio'),
+             ('/shp/Ohio/akron-canton-youngstown.shp', 'akron-canton-youngstown', 'Akron-Canton-Youngstown'),
+             ('/shp/Ohio/cleveland-northeastohio.shp', 'cleveland-northeastohio', 'Cleveland-Northeast Ohio'),
+             ('/shp/Ohio/northwestohio.shp', 'northwestohio', 'Northwest Ohio'),
+             ('/shp/Ohio/appalachiaohio.shp', 'appalachiaohio', 'Appalachian Ohio'),
+             ('/shp/Ohio/columbus-centralohio.shp', 'columbus-centralohio', 'Columbus-Central Ohio'),
+             ('/shp/Ohio/southwestohio.shp', 'southwestohio', 'Southwest Ohio')]
+    #"New Mexico": ('statewide', 'newmexico', "New Mexico"),
+    #"Texas": ('statewide', 'texast', "Texas"),
+    #"Wisconsin": ('statewide', 'wisconsin_', "Wisconsin"),
+
+    ## Forthcoming
+    #"Florida": ('statewide', 'florida', 'Florida'),
+    #'Pennsylvania': ('statewide', 'pennsylvania', 'Pennsylvania'),
 }
 
 # slug for writing dataset pivot files
