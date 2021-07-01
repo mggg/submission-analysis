@@ -6,7 +6,7 @@ import us
 import contextily as ctx
 
 # global font
-font = {'fontname':'Herculanum'}
+font = {'fontname':'Helvetica'}
 
 # lookup for mggg-states shapefile raw links
 mggg_states = {
