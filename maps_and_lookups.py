@@ -15,14 +15,14 @@ import os
 
 ##### THINGS TO CHANGE ######
 to_draw = {
-    #"Michigan": ('statewide', 'michigan_test'),
-    "Missouri": [('statewide', 'missouri_test'), ('../shp_test/stlouis/St_Louis_square.shp', 'stlouis_test')],
-    #"Ohio": ('statewide', 'ohio_test2'),
-    #"New Mexico": ('statewide', 'newmexico_test'), 
-    #"Texas": ('statewide', 'texas_test'),
-    "Utah": ('statewide', 'utah_test'),
-    #"Virginia": ('statewide', 'virginia_test'), ## NOT WORKING
-    #"Wisconsin": ('statewide', 'wisconsin_test')
+    #"Michigan": ('statewide', 'michigan_test', 'Michigan),
+    "Missouri": [('statewide', 'missouri_test', "Missouri"), 
+                ('../shp_test/stlouis/St_Louis_square.shp', 'stlouis_test', "St. Louis")],
+    #"Ohio": ('statewide', 'ohio_test2', 'Ohio),
+    #"New Mexico": ('statewide', 'newmexico_test', "New Mexico"), 
+    #"Texas": ('statewide', 'texas_test', "Texas"),
+    "Utah": ('statewide', 'utah_test', "Utah"),
+    #"Wisconsin": ('statewide', 'wisconsin_test', "Wisconsin")
 }
 
 # slug for writing dataset pivot files
@@ -69,7 +69,7 @@ def create_coi_maps(state, data):
     print("Weekly Dataset Written")
     
     # make the maps!
-    for (geom, outfile) in data:
+    for (geom, outfile, title) in data:
         print(f"Mapping {outfile}")
         # figure out if geom is a state name or a shapefile
         osm = False
@@ -79,16 +79,15 @@ def create_coi_maps(state, data):
             clip = gpd.read_file(f'../{geom}')
             osm = True
     
-        coi_maps.plot_coi_boundaries(cumulative, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_{today}_boundaries.png', show = False)
-        coi_maps.plot_coi_heatmap(cumulative, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_{today}_heatmap.png', show = False)
+        coi_maps.plot_coi_boundaries(cumulative, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_{today}_boundaries.png', show = False, title = title)
+        coi_maps.plot_coi_heatmap(cumulative, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_{today}_heatmap.png', show = False, title = title)
         
-        coi_maps.plot_coi_boundaries(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}__weekly{today}_boundaries.png', show = False)
-        coi_maps.plot_coi_heatmap(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_weekly{today}_heatmap.png', show = False)
+        coi_maps.plot_coi_boundaries(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}__weekly{today}_boundaries.png', show = False, title = title)
+        coi_maps.plot_coi_heatmap(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_weekly{today}_heatmap.png', show = False, title = title)
         
     print(f"Done with {state.upper()}\n\n")
 
 def main():
-    wd = os
     today = str(np.datetime64('today'))
     os.mkdir(today)
     os.chdir(today)

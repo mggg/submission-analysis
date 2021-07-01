@@ -1,10 +1,13 @@
+from numpy import datetime64 as dt
 import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import us
 import contextily as ctx
 
-# lookup for mggg-states shapefile raw links
+# global font
+font = {'fontname':'Herculanum'}
+
 # lookup for mggg-states shapefile raw links
 mggg_states = {
     'Ohio': 'https://github.com/mggg-states/OH-shapefiles/blob/master/OH_precincts.zip?raw=true',
@@ -143,7 +146,7 @@ def assignment_to_shape(df):
     return gpd.GeoDataFrame(acc, crs = crs)
                
 # in these, clip_bounds can either be a capitalized state name or a geometry to clip to
-def plot_coi_boundaries(coi_df, clip_bounds, osm = False, outfile = None, show = True):
+def plot_coi_boundaries(coi_df, clip_bounds, osm = False, outfile = None, show = True, title = None):
     if isinstance(clip_bounds, str):
         state_gdf = gpd.read_file('https://www2.census.gov/geo/tiger/GENZ2018/shp/cb_2018_us_state_5m.zip')
         clip_bounds = state_gdf[state_gdf['NAME'] == clip_bounds]
@@ -159,6 +162,8 @@ def plot_coi_boundaries(coi_df, clip_bounds, osm = False, outfile = None, show =
     dissolved.boundary.plot(ax = ax, cmap = 'tab20')
     clipped.plot(ax = ax, column = 'id', cmap = 'tab20', alpha = 0.5)
     clip_bounds.boundary.plot(ax = ax, color = 'black', linewidth = 2)
+    if title:
+        ax.set_title(f'Communities of Interest\n{title}\n{dt("today")}\n{len(list(set(clipped["id"])))} Submissions', **font)
     if osm:
         ctx.add_basemap(ax, alpha = 0.5)
     if outfile:
@@ -167,7 +172,7 @@ def plot_coi_boundaries(coi_df, clip_bounds, osm = False, outfile = None, show =
         plt.show()
     plt.close()
     
-def plot_coi_heatmap(coi_df, clip_bounds, color = 'purple', osm = False, outfile = None, show = True):
+def plot_coi_heatmap(coi_df, clip_bounds, color = 'purple', osm = False, outfile = None, show = True, title = None):
     if isinstance(clip_bounds, str):
         state_gdf = gpd.read_file('https://www2.census.gov/geo/tiger/GENZ2018/shp/cb_2018_us_state_5m.zip')
         clip_bounds = state_gdf[state_gdf['NAME'] == clip_bounds]
@@ -181,6 +186,8 @@ def plot_coi_heatmap(coi_df, clip_bounds, color = 'purple', osm = False, outfile
     ax.set_axis_off()
     clip_bounds.boundary.plot(ax = ax, color = 'black', linewidth = 2)
     clipped.plot(ax = ax, color = color, alpha = 0.2)
+    if title:
+        ax.set_title(f'Communities of Interest\n{title}\n{dt("today")}\n{len(list(set(clipped["id"])))} Submissions', **font)
     if osm:
         ctx.add_basemap(ax, alpha = 0.5)
     if outfile:
