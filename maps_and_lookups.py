@@ -16,7 +16,9 @@ import os
 ##### THINGS TO CHANGE ######
 to_draw = {
     #"Michigan": ('statewide', 'michigan', 'Michigan'),
-    #"Missouri": [('statewide', 'missouri', "Missouri")],
+    "Missouri": [('statewide', 'missouri', "Missouri")
+                  ('/shp/Missouri/St_Louis_area.shp', 'stlouis', 'St. Louis')
+                  ('/shp/Missouri/Kansas_City_area.shp', 'kansascity', 'Kansas City')],
     "Ohio": [('statewide', 'ohio', 'Ohio'),
              ('/shp/Ohio/akron-canton-youngstown.shp', 'akron-canton-youngstown', 'Akron-Canton-Youngstown'),
              ('/shp/Ohio/cleveland-northeastohio.shp', 'cleveland-northeastohio', 'Cleveland-Northeast Ohio'),
