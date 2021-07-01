@@ -25,10 +25,11 @@ to_draw = {
              ('/shp/Ohio/northwestohio.shp', 'northwestohio', 'Northwest Ohio'),
              ('/shp/Ohio/appalachiaohio.shp', 'appalachiaohio', 'Appalachian Ohio'),
              ('/shp/Ohio/columbus-centralohio.shp', 'columbus-centralohio', 'Columbus-Central Ohio'),
-             ('/shp/Ohio/southwestohio.shp', 'southwestohio', 'Southwest Ohio')]
+             ('/shp/Ohio/southwestohio.shp', 'southwestohio', 'Southwest Ohio')],
     #"New Mexico": ('statewide', 'newmexico', "New Mexico"),
     #"Texas": ('statewide', 'texast', "Texas"),
-    #"Wisconsin": ('statewide', 'wisconsin_', "Wisconsin"),
+    "Wisconsin": [('statewide', 'wisconsin_', "Wisconsin"),
+                  ('/shp/Wisconsin/greatermilwaukee.shp', 'milwaukee', 'Greater Milwaukee')]
 
     ## Forthcoming
     #"Florida": ('statewide', 'florida', 'Florida'),
