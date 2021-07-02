@@ -16,9 +16,14 @@ import copy
 
 ##### THINGS TO CHANGE ######
 to_draw = {
-    #"Michigan": ('statewide', 'michigan', 'Michigan'),
-    "Missouri": [('statewide', 'missouri', "Missouri")
-                  ('/shp/Missouri/St_Louis_area.shp', 'stlouis', 'St. Louis')
+    "Michigan": [('statewide', 'michigan', 'Michigan'),
+                 ('/shp/Michigan/ann_arbor.shp', 'ann_arbor', 'Ann Arbor'),
+                 ('/shp/Michigan/detroit.shp', 'detroit', 'Detroit'),
+                 ('/shp/Michigan/flint.shp', 'flint', 'Flint'),
+                 ('/shp/Michigan/grand_rapids.shp', 'grand_rapids', 'Grand Rapids'),
+                 ('/shp/Michigan/lansing.shp', 'lansing', 'Lansing')],
+    "Missouri": [('statewide', 'missouri', "Missouri"),
+                  ('/shp/Missouri/St_Louis_area.shp', 'stlouis', 'St. Louis'),
                   ('/shp/Missouri/Kansas_City_area.shp', 'kansascity', 'Kansas City')],
     "Ohio": [('statewide', 'ohio', 'Ohio'),
              ('/shp/Ohio/akron-canton-youngstown.shp', 'akron-canton-youngstown', 'Akron-Canton-Youngstown'),
@@ -27,12 +32,12 @@ to_draw = {
              ('/shp/Ohio/appalachiaohio.shp', 'appalachiaohio', 'Appalachian Ohio'),
              ('/shp/Ohio/columbus-centralohio.shp', 'columbus-centralohio', 'Columbus-Central Ohio'),
              ('/shp/Ohio/southwestohio.shp', 'southwestohio', 'Southwest Ohio')],
-    #"New Mexico": ('statewide', 'newmexico', "New Mexico"),
-    #"Texas": ('statewide', 'texast', "Texas"),
-    "Wisconsin": [('statewide', 'wisconsin_', "Wisconsin"),
+    "Wisconsin": [('statewide', 'wisconsin', "Wisconsin"),
                   ('/shp/Wisconsin/greatermilwaukee.shp', 'milwaukee', 'Greater Milwaukee')]
 
     ## Forthcoming
+    #"Texas": ('statewide', 'texas', "Texas"),
+    #"New Mexico": ('statewide', 'newmexico', "New Mexico"),
     #"Florida": ('statewide', 'florida', 'Florida'),
     #'Pennsylvania': ('statewide', 'pennsylvania', 'Pennsylvania'),
 }
@@ -69,7 +74,7 @@ def create_coi_maps(state, data):
     coi_df['datetime'] = coi_df['datetime'].apply(np.datetime64)
     cumulative = coi_maps.assignment_to_shape(coi_df)
     if not isinstance(cumulative, pd.DataFrame):
-        print(f"Done with {state.upper()}\n\n")
+        print(f"Done with {state.upper()}\n")
         return
     coi_dataset.assignment_to_pivot(coi_df, f'lookup_tables/{state}_{today}.csv')
     print("Cumulative Dataset Written\n")
