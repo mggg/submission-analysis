@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 import geopandas as gpd
 import os
+import copy
 
 
 ##### THINGS TO CHANGE ######
@@ -71,7 +72,7 @@ def create_coi_maps(state, data):
     coi_dataset.assignment_to_pivot(coi_df, f'lookup_tables/{state}_{today}.csv')
     print("Cumulative Dataset Written")
     
-    weekly = coi_df[coi_df['datetime'] > (today - np.timedelta64(1, 'W'))]
+    weekly = copy.deepcopy(coi_df[coi_df['datetime'] > (today - np.timedelta64(1, 'W'))])
     coi_dataset.assignment_to_pivot(weekly, f'lookup_tables/{state}_weekly_{today}.csv')
     weekly = coi_maps.assignment_to_shape(weekly)
     print("Weekly Dataset Written")
