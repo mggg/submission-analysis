@@ -36,9 +36,6 @@ to_draw = {
     #'Pennsylvania': ('statewide', 'pennsylvania', 'Pennsylvania'),
 }
 
-# slug for writing dataset pivot files
-slug = 'dataset/'
-
 ## actual code
 # data is list of (geom, outfile) tuples
 def create_coi_maps(state, data):

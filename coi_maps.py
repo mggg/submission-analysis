@@ -158,6 +158,8 @@ def plot_coi_boundaries(coi_df, clip_bounds, osm = False, outfile = None, show =
     clipped = gpd.clip(coi_df, clip_bounds)
     fig, ax = plt.subplots(figsize = (20,10))
     dissolved = gpd.clip(coi_df.dissolve(by = 'id'), clip_bounds).buffer(0)
+    # to avoid some errors
+    dissolved = dissolved[~dissolved.is_empty]
     ax.set_axis_off()
     dissolved.boundary.plot(ax = ax, cmap = 'tab20')
     clipped.plot(ax = ax, column = 'id', cmap = 'tab20', alpha = 0.5)
