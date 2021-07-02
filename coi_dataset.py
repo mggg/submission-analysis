@@ -41,7 +41,6 @@ def assignment_to_pivot(df, outfile = None):
     else:
         link = coi_maps.mggg_states[state]
     shp = gpd.read_file(link)
-    print("Have shapefile.")
     
     subset = df[df['units'] == unit]
     key = subset.iloc[0]['districtr_data']['plan']['idColumn']['key']
@@ -79,13 +78,11 @@ def assignment_to_pivot(df, outfile = None):
         plan_id = row['plan_id']
         row_key = row['districtr_data']['plan']['idColumn']['key']
         if state == "Wisconsin" and row_key == "GEOID10" and unit == "wards":
-            #print("Skipping a plan because it is on old WI wards")
             continue
 
         try:
             asn = row['districtr_data']['plan']['assignment']
         except KeyError: # empty plan
-            #print("Empty plan...")
             continue
 
         # make lists

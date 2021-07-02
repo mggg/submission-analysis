@@ -43,7 +43,8 @@ def create_coi_maps(state, data):
     if not isinstance(data, list):
         data = [data]
     link = state.lower().replace(" ", "")
-    print(f'{len(data)} set(s) to print in {state.upper()}')
+    print(f'----------- {state} -------------')
+    print(f'{len(data)} set(s) to print in {state}')
 
     # read the COI dataframe
     ids = f"https://k61e3cz2ni.execute-api.us-east-2.amazonaws.com/prod/submissions/districtr-ids/{link}"
@@ -64,22 +65,24 @@ def create_coi_maps(state, data):
 
     today = np.datetime64('today')
 
+    print("Writing Cumulative Dataset")
     coi_df['datetime'] = coi_df['datetime'].apply(np.datetime64)
     cumulative = coi_maps.assignment_to_shape(coi_df)
     if not isinstance(cumulative, pd.DataFrame):
         print(f"Done with {state.upper()}\n\n")
         return
     coi_dataset.assignment_to_pivot(coi_df, f'lookup_tables/{state}_{today}.csv')
-    print("Cumulative Dataset Written")
+    print("Cumulative Dataset Written\n")
     
+    print("Writing Weekly Dataset")
     weekly = copy.deepcopy(coi_df[coi_df['datetime'] > (today - np.timedelta64(1, 'W'))])
     coi_dataset.assignment_to_pivot(weekly, f'lookup_tables/{state}_weekly_{today}.csv')
     weekly = coi_maps.assignment_to_shape(weekly)
-    print("Weekly Dataset Written")
+    print("Weekly Dataset Written\n")
     
     # make the maps!
     for (geom, outfile, title) in data:
-        print(f"Mapping {outfile}")
+        print(f"Mapping {title}")
         # figure out if geom is a state name or a shapefile
         osm = False
         clip = state
@@ -101,7 +104,7 @@ def create_coi_maps(state, data):
         except Exception as e:
             print(f"Could not print {title} weekly due to {e}.")
 
-    print(f"Done with {state.upper()}\n\n")
+    print(f"Done with {state.upper()}\n")
 
 def main():
     today = str(np.datetime64('today'))

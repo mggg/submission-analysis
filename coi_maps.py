@@ -61,7 +61,7 @@ def assignment_to_shape(df):
     acc = pd.DataFrame(columns = ['id', 'plan_id', 'coi_id', 'tile_id', 'geometry'])
     # iterate over units
     for unit in set(df['units']):
-        print(f'Downloading shapefile for {unit}')
+        print(f'Downloading shapefile for {unit.upper()}')
         # download appropriate shape
         if unit == "blockgroups":
             link = f'https://www2.census.gov/geo/pvs/tiger2010st/{fips}_{state}/{fips}/tl_2010_{fips}_bg10.zip'
@@ -70,7 +70,6 @@ def assignment_to_shape(df):
         else:
             link = mggg_states[state]
         shp = gpd.read_file(link)
-        print("Have shapefile.")
 
         # get everything into the same crs
         if not crs:
@@ -80,7 +79,7 @@ def assignment_to_shape(df):
             shp = shp.to_crs(crs)
 
         subset = df[df['units'] == unit]
-        print(f'{len(subset)} submissions using {unit}\n')
+        print(f'{len(subset)} submissions using {unit}')
         
         # each COI is a row
         for idx, row in subset.iterrows():
@@ -156,6 +155,7 @@ def plot_coi_boundaries(coi_df, clip_bounds, osm = False, outfile = None, show =
         clip_bounds = clip_bounds.to_crs(3857)
         coi_df = coi_df.to_crs(3857)
     clipped = gpd.clip(coi_df, clip_bounds)
+
     fig, ax = plt.subplots(figsize = (20,10))
     dissolved = gpd.clip(coi_df.dissolve(by = 'id'), clip_bounds).buffer(0)
     # to avoid some errors
@@ -184,6 +184,7 @@ def plot_coi_heatmap(coi_df, clip_bounds, color = 'purple', osm = False, outfile
         clip_bounds = clip_bounds.to_crs(3857)
         coi_df = coi_df.to_crs(3857)
     clipped = gpd.clip(coi_df, clip_bounds)
+
     fig, ax = plt.subplots(figsize = (20,10))
     ax.set_axis_off()
     clip_bounds.boundary.plot(ax = ax, color = 'black', linewidth = 2)
