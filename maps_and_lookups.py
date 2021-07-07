@@ -33,13 +33,13 @@ to_draw = {
              ('/shp/Ohio/columbus-centralohio.shp', 'columbus-centralohio', 'Columbus-Central Ohio'),
              ('/shp/Ohio/southwestohio.shp', 'southwestohio', 'Southwest Ohio')],
     "Wisconsin": [('statewide', 'wisconsin', "Wisconsin"),
-                  ('/shp/Wisconsin/greatermilwaukee.shp', 'milwaukee', 'Greater Milwaukee')]
+                  ('/shp/Wisconsin/greatermilwaukee.shp', 'milwaukee', 'Greater Milwaukee')],
 
-    ## Forthcoming
-    #"Texas": ('statewide', 'texas', "Texas"),
-    #"New Mexico": ('statewide', 'newmexico', "New Mexico"),
-    #"Florida": ('statewide', 'florida', 'Florida'),
-    #'Pennsylvania': ('statewide', 'pennsylvania', 'Pennsylvania'),
+    # Forthcoming
+    # "Texas": ('statewide', 'texas', "Texas"),
+    # "New Mexico": ('statewide', 'newmexico', "New Mexico"),
+    # "Florida": ('statewide', 'florida', 'Florida'),
+    # 'Pennsylvania': ('statewide', 'pennsylvania', 'Pennsylvania'),
 }
 
 ## actual code
@@ -97,8 +97,8 @@ def create_coi_maps(state, data):
             osm = True
     
         try:
-            coi_maps.plot_coi_boundaries(cumulative, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_{today}_boundaries.png', show = False)
-            coi_maps.plot_coi_heatmap(cumulative, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_{today}_heatmap.png', show = False)
+            coi_maps.plot_coi_boundaries(cumulative, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_{today}_boundaries', show = False)
+            coi_maps.plot_coi_heatmap(cumulative, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_{today}_heatmap', show = False)
         except Exception as e:
             print(f"Could not print {title} due to {e}.")
         try:
