@@ -169,7 +169,7 @@ def plot_coi_boundaries(coi_df, clip_bounds, osm = False, outfile = None, show =
     if osm:
         ctx.add_basemap(ax, alpha = 0.5)
     if outfile:
-        plt.savefig(outfile)
+        plt.savefig(outfile, bbox_inches = "tight")
     if show:
         plt.show()
     plt.close()
@@ -194,7 +194,7 @@ def plot_coi_heatmap(coi_df, clip_bounds, color = 'purple', osm = False, outfile
     if osm:
         ctx.add_basemap(ax, alpha = 0.5)
     if outfile:
-        plt.savefig(outfile)
+        plt.savefig(outfile, bbox_inches = "tight")
     if show:
         plt.show()
     plt.close()
