@@ -1,4 +1,4 @@
-from numpy import datetime64 as dt
+import numpy as np
 import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
@@ -145,7 +145,10 @@ def assignment_to_shape(df):
     return gpd.GeoDataFrame(acc, crs = crs)
                
 # in these, clip_bounds can either be a capitalized state name or a geometry to clip to
-def plot_coi_boundaries(coi_df, clip_bounds, osm = False, outfile = None, show = True, title = None):
+def plot_coi_boundaries(coi_df, clip_bounds, 
+                        osm = False, outfile = None, 
+                        show = True, title = None,
+                        writer = None, weekly = False, monday = None):
     if isinstance(clip_bounds, str):
         state_gdf = gpd.read_file('https://www2.census.gov/geo/tiger/GENZ2018/shp/cb_2018_us_state_5m.zip')
         clip_bounds = state_gdf[state_gdf['NAME'] == clip_bounds]
@@ -164,13 +167,19 @@ def plot_coi_boundaries(coi_df, clip_bounds, osm = False, outfile = None, show =
     dissolved.boundary.plot(ax = ax, cmap = 'tab20')
     clipped.plot(ax = ax, column = 'id', cmap = 'tab20', alpha = 0.5)
     clip_bounds.boundary.plot(ax = ax, color = 'black', linewidth = 2)
-    if title:
-        ax.set_title(f'Communities of Interest\n{title}\n{dt("today")}\n{len(list(set(clipped["id"])))} Submissions', **font)
+    ncois = len(list(set(clipped["id"])))
+    nsubs = len(list(set(clipped["plan_id"])))
+    if writer:
+        if weekly:
+            writer.write(f" Date Range: {monday - np.timedelta64(7)} - {monday}\n")
+        else:
+            writer.write(f" Date Range: cumulative through {monday}\n")
+        writer.write(f" {ncois} areas of interest from {nsubs} submissions\n")
+    writer.write
     if osm:
         ctx.add_basemap(ax, alpha = 0.5)
     if outfile:
-        ncois = len(list(set(clipped["id"])))
-        plt.savefig(f"{outfile}_{ncois}.png", bbox_inches = "tight")
+        plt.savefig(f"{outfile}.png", bbox_inches = "tight")
     if show:
         plt.show()
     plt.close()
@@ -186,17 +195,15 @@ def plot_coi_heatmap(coi_df, clip_bounds, color = 'purple', osm = False, outfile
         coi_df = coi_df.to_crs(3857)
     clipped = gpd.clip(coi_df, clip_bounds)
 
+    # no file writing in this one, all in boundaries
     fig, ax = plt.subplots(figsize = (20,10))
     ax.set_axis_off()
     clip_bounds.boundary.plot(ax = ax, color = 'black', linewidth = 2)
     clipped.plot(ax = ax, color = color, alpha = 0.2)
-    if title:
-        ax.set_title(f'Communities of Interest\n{title}\n{dt("today")}\n{len(list(set(clipped["id"])))} Submissions', **font)
     if osm:
         ctx.add_basemap(ax, alpha = 0.5)
     if outfile:
-        ncois = len(list(set(clipped["id"])))
-        plt.savefig(f"{outfile}_{ncois}.png", bbox_inches = "tight")
+        plt.savefig(f"{outfile}.png", bbox_inches = "tight")
     if show:
         plt.show()
     plt.close()

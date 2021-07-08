@@ -4,6 +4,7 @@ And also all the COI pivoted 1/0 csvs
 - Jack Deschler
 '''
 
+from matplotlib.pyplot import text
 import fetch
 import coi_maps
 import coi_dataset
@@ -12,6 +13,7 @@ import pandas as pd
 import geopandas as gpd
 import os
 import copy
+import datetime
 
 
 ##### THINGS TO CHANGE ######
@@ -51,6 +53,7 @@ def create_coi_maps(state, data):
     print(f'----------- {state} -------------')
     print(f'{len(data)} set(s) to print in {state}')
 
+
     # read the COI dataframe
     ids = f"https://k61e3cz2ni.execute-api.us-east-2.amazonaws.com/prod/submissions/districtr-ids/{link}"
     plan = f"https://k61e3cz2ni.execute-api.us-east-2.amazonaws.com/prod/submissions/csv/{link}?type=plan&length=10000"
@@ -69,10 +72,14 @@ def create_coi_maps(state, data):
     _, coi_df, _ = fetch.submissions(ids, plan, cois, written)
 
     monday = most_recent_monday(np.datetime64('today'))
+    textfile = open(f"./{state.lower()}/{state.lower()}_info_{monday}.txt", "w")
+    textfile.write(f'----------- {state} -------------\n')
 
     print("Writing Cumulative Dataset")
     coi_df['datetime'] = coi_df['datetime'].apply(np.datetime64)
-    cumulative = coi_maps.assignment_to_shape(coi_df)
+    cumulative = copy.deepcopy(coi_df[coi_df['datetime'] < monday])
+    print(f"{len(cumulative)} submissions through monday")
+    cumulative = coi_maps.assignment_to_shape(cumulative)
     if not isinstance(cumulative, pd.DataFrame):
         print(f"Done with {state.upper()}\n")
         return
@@ -80,14 +87,19 @@ def create_coi_maps(state, data):
     print("Cumulative Dataset Written\n")
     
     print("Writing Weekly Dataset")
-    weekly = copy.deepcopy(coi_df[coi_df['datetime'] > (monday - np.timedelta64(1, 'W'))])
+    weekly = coi_df[coi_df['datetime'] > (monday - np.timedelta64(1, 'W'))]
+    weekly = weekly[weekly['datetime'] < monday]
+    weekly = copy.deepcopy(weekly)
     coi_dataset.assignment_to_pivot(weekly, f'lookup_tables/{state}_weekly_{monday}.csv')
+    print(f"{len(weekly)} submissions in the last week")
     weekly = coi_maps.assignment_to_shape(weekly)
     print("Weekly Dataset Written\n")
     
     # make the maps!
     for (geom, outfile, title) in data:
         print(f"Mapping {title}")
+        textfile.write("Statewide\n") if geom == 'statewide' else textfile.write(f"{title}\n")
+
         # figure out if geom is a state name or a shapefile
         osm = False
         clip = state
@@ -97,19 +109,26 @@ def create_coi_maps(state, data):
             osm = True
     
         try:
-            coi_maps.plot_coi_boundaries(cumulative, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_{monday}_boundaries', show = False)
+            coi_maps.plot_coi_boundaries(cumulative, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_{monday}_boundaries', 
+                                         show = False, writer = textfile, monday = monday)
             coi_maps.plot_coi_heatmap(cumulative, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_{monday}_heatmap', show = False)
         except Exception as e:
             print(f"Could not print {title} due to {e}.")
+        textfile.write("\n")
         try:
-            coi_maps.plot_coi_boundaries(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}__weekly{monday}_boundaries.png', show = False)
+            coi_maps.plot_coi_boundaries(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}__weekly{monday}_boundaries.png', show = False, writer = textfile, weekly = True, monday = monday)
             coi_maps.plot_coi_heatmap(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_weekly{monday}_heatmap.png', show = False)
-        except AttributeError:
+        except AttributeError as e:
+            print(e)
+            textfile.write(f" Date Range: {monday - np.timedelta64(7)} - {monday}\n")
+            textfile.write(" 0 areas of interest from 0 submissions\n")
             print(f"No new COIs in {title} this week.")
         except Exception as e:
             print(f"Could not print {title} weekly due to {e}.")
+        textfile.write("\n\n")
 
     print(f"Done with {state.upper()}\n")
+    textfile.close()
 
 def most_recent_monday(d):
     weekday = d.astype(datetime.datetime).isoweekday()
