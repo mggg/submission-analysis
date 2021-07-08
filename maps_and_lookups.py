@@ -68,7 +68,7 @@ def create_coi_maps(state, data):
     
     _, coi_df, _ = fetch.submissions(ids, plan, cois, written)
 
-    today = np.datetime64('today')
+    monday = most_recent_monday(np.datetime64('today'))
 
     print("Writing Cumulative Dataset")
     coi_df['datetime'] = coi_df['datetime'].apply(np.datetime64)
@@ -76,12 +76,12 @@ def create_coi_maps(state, data):
     if not isinstance(cumulative, pd.DataFrame):
         print(f"Done with {state.upper()}\n")
         return
-    coi_dataset.assignment_to_pivot(coi_df, f'lookup_tables/{state}_{today}.csv')
+    coi_dataset.assignment_to_pivot(coi_df, f'lookup_tables/{state}_{monday}.csv')
     print("Cumulative Dataset Written\n")
     
     print("Writing Weekly Dataset")
-    weekly = copy.deepcopy(coi_df[coi_df['datetime'] > (today - np.timedelta64(1, 'W'))])
-    coi_dataset.assignment_to_pivot(weekly, f'lookup_tables/{state}_weekly_{today}.csv')
+    weekly = copy.deepcopy(coi_df[coi_df['datetime'] > (monday - np.timedelta64(1, 'W'))])
+    coi_dataset.assignment_to_pivot(weekly, f'lookup_tables/{state}_weekly_{monday}.csv')
     weekly = coi_maps.assignment_to_shape(weekly)
     print("Weekly Dataset Written\n")
     
@@ -97,13 +97,13 @@ def create_coi_maps(state, data):
             osm = True
     
         try:
-            coi_maps.plot_coi_boundaries(cumulative, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_{today}_boundaries', show = False)
-            coi_maps.plot_coi_heatmap(cumulative, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_{today}_heatmap', show = False)
+            coi_maps.plot_coi_boundaries(cumulative, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_{monday}_boundaries', show = False)
+            coi_maps.plot_coi_heatmap(cumulative, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_{monday}_heatmap', show = False)
         except Exception as e:
             print(f"Could not print {title} due to {e}.")
         try:
-            coi_maps.plot_coi_boundaries(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}__weekly{today}_boundaries.png', show = False, title = title)
-            coi_maps.plot_coi_heatmap(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_weekly{today}_heatmap.png', show = False, title = title)
+            coi_maps.plot_coi_boundaries(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}__weekly{monday}_boundaries.png', show = False, title = title)
+            coi_maps.plot_coi_heatmap(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_weekly{monday}_heatmap.png', show = False, title = title)
         except AttributeError:
             print(f"No new COIs in {title} this week.")
         except Exception as e:
@@ -111,10 +111,14 @@ def create_coi_maps(state, data):
 
     print(f"Done with {state.upper()}\n")
 
+def most_recent_monday(d):
+    weekday = d.astype(datetime.datetime).isoweekday()
+    return d - np.timedelta64(weekday - 1)
+
 def main():
-    today = str(np.datetime64('today'))
-    os.mkdir(today)
-    os.chdir(today)
+    monday = str(most_recent_monday(np.datetime64('today')))
+    os.mkdir(monday)
+    os.chdir(monday)
     os.mkdir("lookup_tables")
     for s in to_draw.keys():
         os.mkdir(s.lower())
