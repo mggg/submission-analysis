@@ -102,8 +102,8 @@ def create_coi_maps(state, data):
         except Exception as e:
             print(f"Could not print {title} due to {e}.")
         try:
-            coi_maps.plot_coi_boundaries(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}__weekly{monday}_boundaries.png', show = False, title = title)
-            coi_maps.plot_coi_heatmap(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_weekly{monday}_heatmap.png', show = False, title = title)
+            coi_maps.plot_coi_boundaries(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}__weekly{monday}_boundaries.png', show = False)
+            coi_maps.plot_coi_heatmap(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_weekly{monday}_heatmap.png', show = False)
         except AttributeError:
             print(f"No new COIs in {title} this week.")
         except Exception as e:
