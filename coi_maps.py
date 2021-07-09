@@ -158,6 +158,28 @@ def plot_coi_boundaries(coi_df, clip_bounds,
         clip_bounds = clip_bounds.to_crs(3857)
         coi_df = coi_df.to_crs(3857)
     clipped = gpd.clip(coi_df, clip_bounds)
+    # if we have to clip to the expanded bounding box
+    if isinstance(clip_bounds, str):
+        clipped = clipped['id']
+        clipped = coi_df[coi_df['id'].isin(clipped)]
+        # get our bounding box
+        bbox = clip_bounds.to_crs(coi_df.crs).buffer(20000).envelope
+        # clip the cois to the bounding box
+        clipped = gpd.clip(coi_df, bbox)
+
+    clipped = gpd.clip(coi_df, clip_bounds)['id']
+    clipped = coi_df[coi_df['id'].isin(clipped)]
+    
+    if (len(clipped) == 0):
+        print(f"No COIs in {title}")
+        if writer:
+            if weekly:
+                writer.write(f" Date Range: {monday - np.timedelta64(7)} - {monday}\n")
+            else:
+                writer.write(f" Date Range: cumulative through {monday}\n")
+            writer.write(" 0 areas of interest from 0 submissions\n")
+        return
+
 
     fig, ax = plt.subplots(figsize = (20,10))
     dissolved = gpd.clip(coi_df.dissolve(by = 'id'), clip_bounds).buffer(0)
@@ -175,7 +197,7 @@ def plot_coi_boundaries(coi_df, clip_bounds,
         else:
             writer.write(f" Date Range: cumulative through {monday}\n")
         writer.write(f" {ncois} areas of interest from {nsubs} submissions\n")
-    writer.write
+
     if osm:
         ctx.add_basemap(ax, alpha = 0.5)
     if outfile:
@@ -194,6 +216,18 @@ def plot_coi_heatmap(coi_df, clip_bounds, color = 'purple', osm = False, outfile
         clip_bounds = clip_bounds.to_crs(3857)
         coi_df = coi_df.to_crs(3857)
     clipped = gpd.clip(coi_df, clip_bounds)
+    # if we have to clip to the expanded bounding box
+    if isinstance(clip_bounds, str):
+        clipped = clipped['id']
+        clipped = coi_df[coi_df['id'].isin(clipped)]
+        # get our bounding box
+        bbox = clip_bounds.to_crs(coi_df.crs).buffer(20000).envelope
+        # clip the cois to the bounding box
+        clipped = gpd.clip(coi_df, bbox)
+
+    if (len(clipped) == 0):
+        print(f"No COIs in {title}")
+        return
 
     # no file writing in this one, all in boundaries
     fig, ax = plt.subplots(figsize = (20,10))
