@@ -76,6 +76,10 @@ def create_coi_maps(state, data):
     
     _, coi_df, _ = fetch.submissions(ids, plan, cois, written)
 
+    # Need to drop these in Ohio for now
+    if state == "Ohio":
+        coi_df = coi_df.drop(coi_df[coi_df["first"] == "OOC"].index)
+
     monday = most_recent_monday(np.datetime64('today'))
     textfile = open(f"./{state.lower()}/{state.lower()}_info_{monday}.txt", "w")
     textfile.write(f'----------- {state} -------------\n')
@@ -114,15 +118,18 @@ def create_coi_maps(state, data):
             osm = True
     
         try:
-            coi_maps.plot_coi_boundaries(cumulative, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_{monday}_boundaries', 
-                                         show = False, writer = textfile, monday = monday)
-            coi_maps.plot_coi_heatmap(cumulative, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_{monday}_heatmap', show = False)
+            coi_maps.plot_coi_boundaries(cumulative, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_{monday}_boundaries',
+                                         show = False, writer = textfile, monday = monday, title = title)
+            coi_maps.plot_coi_heatmap(cumulative, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_{monday}_heatmap',
+                                      show = False, title = title)
         except Exception as e:
             print(f"Could not print {title} due to {e}.")
         textfile.write("\n")
         try:
-            coi_maps.plot_coi_boundaries(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}__weekly{monday}_boundaries.png', show = False, writer = textfile, weekly = True, monday = monday)
-            coi_maps.plot_coi_heatmap(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_weekly{monday}_heatmap.png', show = False)
+            coi_maps.plot_coi_boundaries(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}__weekly{monday}_boundaries.png',
+                                         show = False, writer = textfile, weekly = True, monday = monday, title = title)
+            coi_maps.plot_coi_heatmap(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_weekly{monday}_heatmap.png',
+                                      show = False, title = title)
         except AttributeError as e:
             print(e)
             textfile.write(f" Date Range: {monday - np.timedelta64(7)} - {monday}\n")
