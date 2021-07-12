@@ -92,7 +92,7 @@ def create_coi_maps(state, data):
     print("Cumulative Dataset Written\n")
     
     print("Writing Weekly Dataset")
-    weekly = coi_df[coi_df['datetime'] > (monday - np.timedelta64(1, 'W'))]
+    weekly = coi_df[coi_df['datetime'] >= (monday - np.timedelta64(1, 'W'))]
     weekly = weekly[weekly['datetime'] < monday]
     weekly = copy.deepcopy(weekly)
     coi_dataset.assignment_to_pivot(weekly, f'lookup_tables/{state}_weekly_{monday}.csv')
