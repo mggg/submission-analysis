@@ -4,6 +4,7 @@ import geopandas as gpd
 import matplotlib.pyplot as plt
 import us
 import contextily as ctx
+import requests
 
 # global font
 font = {'fontname':'Helvetica'}
@@ -91,6 +92,7 @@ def assignment_to_shape(df):
                 continue
                 
             # cast everything to int (and do some error checking)
+            casting = True
             try:
                 shp[key] = shp[key].apply(int)
             except KeyError:
@@ -106,6 +108,7 @@ def assignment_to_shape(df):
                     continue
             except ValueError:
                 shp[key] = shp[key] # can't be turned to an int (not a GEOID)
+                casting = False
                 
             try:
                 asn = row['districtr_data']['plan']['assignment']
@@ -120,11 +123,12 @@ def assignment_to_shape(df):
             tile_ids = []
             geoms = []
             for k, v in asn.items():
-                # cast everything to int
-                try:
-                    k = int(k)
-                except ValueError:
-                    k = k # see above)
+                # cast everything to int if we successfully cast the key column
+                if casting:
+                    try:
+                        k = int(k)
+                    except ValueError:
+                        k = k # see above
                  
                 if isinstance(v, list):
                     for v_prime in v:
@@ -199,7 +203,10 @@ def plot_coi_boundaries(coi_df, clip_bounds,
         writer.write(f" {ncois} areas of interest from {nsubs} submissions\n")
 
     if osm:
-        ctx.add_basemap(ax, alpha = 0.5)
+        try:
+            ctx.add_basemap(ax, alpha = 0.5)
+        except requests.HTTPError:
+            ctx.add_basemap(ax, alpha = 0.5, source = 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png')
     if outfile:
         plt.savefig(f"{outfile}.png", bbox_inches = "tight")
     if show:
@@ -235,7 +242,10 @@ def plot_coi_heatmap(coi_df, clip_bounds, color = 'purple', osm = False, outfile
     clip_bounds.boundary.plot(ax = ax, color = 'black', linewidth = 2)
     clipped.plot(ax = ax, color = color, alpha = 0.2)
     if osm:
-        ctx.add_basemap(ax, alpha = 0.5)
+        try:
+            ctx.add_basemap(ax, alpha = 0.5)
+        except requests.HTTPError:
+            ctx.add_basemap(ax, alpha = 0.5, source = 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png')
     if outfile:
         plt.savefig(f"{outfile}.png", bbox_inches = "tight")
     if show:
