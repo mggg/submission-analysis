@@ -153,7 +153,8 @@ def plot_coi_boundaries(coi_df, clip_bounds,
                         osm = False, outfile = None, 
                         show = True, title = None,
                         writer = None, weekly = False, monday = None):
-    if isinstance(clip_bounds, str):
+    statewide = isinstance(clip_bounds, str)
+    if statewide:
         state_gdf = gpd.read_file('https://www2.census.gov/geo/tiger/GENZ2018/shp/cb_2018_us_state_5m.zip')
         clip_bounds = state_gdf[state_gdf['NAME'] == clip_bounds]
     clip_bounds = clip_bounds.to_crs(coi_df.crs)
@@ -163,16 +164,15 @@ def plot_coi_boundaries(coi_df, clip_bounds,
         coi_df = coi_df.to_crs(3857)
     clipped = gpd.clip(coi_df, clip_bounds)
     # if we have to clip to the expanded bounding box
-    if isinstance(clip_bounds, str):
-        clipped = clipped['id']
-        clipped = coi_df[coi_df['id'].isin(clipped)]
+    if not statewide:
+        clipped_ids = clipped['id']
         # get our bounding box
         bbox = clip_bounds.to_crs(coi_df.crs).buffer(20000).envelope
         # clip the cois to the bounding box
         clipped = gpd.clip(coi_df, bbox)
+        # limit to only in the original bounds
+        clipped = clipped[clipped['id'].isin(clipped_ids)]
 
-    clipped = gpd.clip(coi_df, clip_bounds)['id']
-    clipped = coi_df[coi_df['id'].isin(clipped)]
     
     if (len(clipped) == 0):
         print(f"No COIs in {title}")
@@ -214,7 +214,8 @@ def plot_coi_boundaries(coi_df, clip_bounds,
     plt.close()
     
 def plot_coi_heatmap(coi_df, clip_bounds, color = 'purple', osm = False, outfile = None, show = True, title = None):
-    if isinstance(clip_bounds, str):
+    statewide = isinstance(clip_bounds, str)
+    if statewide:
         state_gdf = gpd.read_file('https://www2.census.gov/geo/tiger/GENZ2018/shp/cb_2018_us_state_5m.zip')
         clip_bounds = state_gdf[state_gdf['NAME'] == clip_bounds]
     clip_bounds = clip_bounds.to_crs(coi_df.crs)
@@ -224,13 +225,14 @@ def plot_coi_heatmap(coi_df, clip_bounds, color = 'purple', osm = False, outfile
         coi_df = coi_df.to_crs(3857)
     clipped = gpd.clip(coi_df, clip_bounds)
     # if we have to clip to the expanded bounding box
-    if isinstance(clip_bounds, str):
-        clipped = clipped['id']
-        clipped = coi_df[coi_df['id'].isin(clipped)]
+    if not statewide:
+        clipped_ids = clipped['id']
         # get our bounding box
         bbox = clip_bounds.to_crs(coi_df.crs).buffer(20000).envelope
         # clip the cois to the bounding box
         clipped = gpd.clip(coi_df, bbox)
+        # limit to only in the original bounds
+        clipped = clipped[clipped['id'].isin(clipped_ids)]
 
     if (len(clipped) == 0):
         print(f"No COIs in {title}")
