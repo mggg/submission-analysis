@@ -126,9 +126,9 @@ def create_coi_maps(state, data):
             print(f"Could not print {title} due to {e}.")
         textfile.write("\n")
         try:
-            coi_maps.plot_coi_boundaries(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}__weekly{monday}_boundaries.png',
+            coi_maps.plot_coi_boundaries(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}__weekly{monday}_boundaries',
                                          show = False, writer = textfile, weekly = True, monday = monday, title = title)
-            coi_maps.plot_coi_heatmap(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_weekly{monday}_heatmap.png',
+            coi_maps.plot_coi_heatmap(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_weekly{monday}_heatmap',
                                       show = False, title = title)
         except AttributeError as e:
             print(e)
