@@ -13,5 +13,6 @@ echo running on: `hostname` # print some info about where we are running
 # cd into the correct directory
 cd $HOME
 cd submission-analysis
+conda activate coi-maps
 ​
 python maps_and_lookups.py #$SLURM_ARRAY_TASK_ID # run the python code with the arguments. 
