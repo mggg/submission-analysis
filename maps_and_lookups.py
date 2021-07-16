@@ -39,7 +39,9 @@ to_draw = {
              ('/shp/Ohio/columbus-centralohio.shp', 'columbus-centralohio', 'Columbus-Central Ohio'),
              ('/shp/Ohio/southwestohio.shp', 'southwestohio', 'Southwest Ohio')],
     "Wisconsin": [('statewide', 'wisconsin', "Wisconsin"),
-                  ('/shp/Wisconsin/greatermilwaukee.shp', 'milwaukee', 'Greater Milwaukee')],
+                  ('/shp/Wisconsin/greatermilwaukee.shp', 'milwaukee', 'Greater Milwaukee'),
+                  ('/shp/Wisconsin/RiverFalls-EauClaire.shp', 'riverfalls_eauclaire', 'River Falls - Eau Claire'),
+                  ('/shp/Wisconsin/SouthwestWisconsin.shp', 'southwest_wisconsin', 'Southwest Wisconsin')],
     "Texas": [('statewide', 'texas', "Texas"),
                ('/shp/Texas/houston.shp', 'houston', "Houston")],
 
