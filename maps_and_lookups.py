@@ -44,10 +44,11 @@ to_draw = {
                   ('/shp/Wisconsin/SouthwestWisconsin.shp', 'southwest_wisconsin', 'Southwest Wisconsin')],
     "Texas": [('statewide', 'texas', "Texas"),
                ('/shp/Texas/houston.shp', 'houston', "Houston")],
+    "New Mexico": [('statewide', 'newmexico', "New Mexico")],
+
 
 
     # Forthcoming
-    # "New Mexico": ('statewide', 'newmexico', "New Mexico"),
     # "Florida": ('statewide', 'florida', 'Florida'),
     # 'Pennsylvania': ('statewide', 'pennsylvania', 'Pennsylvania'),
 }
