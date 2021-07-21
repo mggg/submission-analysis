@@ -84,7 +84,7 @@ def create_coi_maps(state, data):
         coi_df = coi_df.drop(coi_df[coi_df["first"] == "OOC"].index)
 
     monday = most_recent_monday(np.datetime64('today'))
-    textfile = open(f"./{state.lower()}/{state.lower()}_info_{monday}.txt", "w")
+    textfile = open(f"./{state.lower().replace(' ', '')}/{state.lower().replace(' ', '')}_info_{monday}.txt", "w")
     textfile.write(f'----------- {state} -------------\n')
 
     print("Writing Cumulative Dataset")
@@ -94,6 +94,8 @@ def create_coi_maps(state, data):
     cumulative = coi_maps.assignment_to_shape(cumulative)
     if not isinstance(cumulative, pd.DataFrame):
         print(f"Done with {state.upper()}\n")
+        textfile.write(f'No COI submissions yet in {state}')
+        textfile.close()
         return
     coi_dataset.assignment_to_pivot(coi_df, f'lookup_tables/{state}_{monday}.csv')
     print("Cumulative Dataset Written\n")
@@ -121,17 +123,17 @@ def create_coi_maps(state, data):
             osm = True
     
         try:
-            coi_maps.plot_coi_boundaries(cumulative, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_{monday}_boundaries',
+            coi_maps.plot_coi_boundaries(cumulative, clip, osm = osm, outfile = f'{state.lower().replace(" ", "")}/{outfile}_{monday}_boundaries',
                                          show = False, writer = textfile, monday = monday, title = title)
-            coi_maps.plot_coi_heatmap(cumulative, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_{monday}_heatmap',
+            coi_maps.plot_coi_heatmap(cumulative, clip, osm = osm, outfile = f'{state.lower().replace(" ", "")}/{outfile}_{monday}_heatmap',
                                       show = False, title = title)
         except Exception as e:
             print(f"Could not print {title} due to {e}.")
         textfile.write("\n")
         try:
-            coi_maps.plot_coi_boundaries(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_weekly{monday}_boundaries',
+            coi_maps.plot_coi_boundaries(weekly, clip, osm = osm, outfile = f'{state.lower().replace(" ", "")}/{outfile}_weekly{monday}_boundaries',
                                          show = False, writer = textfile, weekly = True, monday = monday, title = title)
-            coi_maps.plot_coi_heatmap(weekly, clip, osm = osm, outfile = f'{state.lower()}/{outfile}_weekly{monday}_heatmap',
+            coi_maps.plot_coi_heatmap(weekly, clip, osm = osm, outfile = f'{state.lower().replace(" ", "")}/{outfile}_weekly{monday}_heatmap',
                                       show = False, title = title)
         except AttributeError as e:
             print(e)
@@ -155,7 +157,7 @@ def main():
     os.chdir(monday)
     os.mkdir("lookup_tables")
     for s in to_draw.keys():
-        os.mkdir(s.lower())
+        os.mkdir(s.lower().replace(" ", ""))
         create_coi_maps(s, to_draw[s])
     os.chdir('..')
 
