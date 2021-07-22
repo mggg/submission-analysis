@@ -42,7 +42,12 @@ def assignment_to_pivot(df, outfile = None):
         link = coi_maps.mggg_states[state]
     shp = gpd.read_file(link)
     
+
     subset = df[df['units'] == unit]
+    if len(subset) == 0:
+        print(f"No COIs submitted on {unit} yet in {state}")
+        return
+
     key = subset.iloc[0]['districtr_data']['plan']['idColumn']['key']
     if state == 'Wisconsin':
         key = "Code-2"
