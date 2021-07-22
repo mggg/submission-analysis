@@ -70,15 +70,12 @@ def assignment_to_pivot(df, outfile = None):
     except ValueError:
         shp[key] = shp[key] # can't be turned to an int (not a GEOID)
             
-
-    # get everything into the same crs
-    crs = shp.crs
-    
     tiles = list(shp[key].apply(str))
-    pivot = pd.DataFrame(columns = tiles)
+    cols = ['submission_text', 'area_text', 'area_name'] + tiles
+    pivot = pd.DataFrame(columns = cols)
 
     # each COI is a row
-    for idx, row in subset.iterrows():
+    for _idx, row in subset.iterrows():
         # get all info
         plan_id = row['plan_id']
         row_key = row['districtr_data']['plan']['idColumn']['key']
@@ -90,6 +87,11 @@ def assignment_to_pivot(df, outfile = None):
         except KeyError: # empty plan
             continue
 
+        sub_text = row['text']
+        parts = row['districtr_data']['plan']['parts']
+        texts = {p['id']: p['name'] for p in parts}
+        titles = {p['id']: (p['description'] if 'description' in p else "") for p in parts}
+
         # make lists
         assigned = asn.keys()
         distinct_cois = {}
@@ -99,18 +101,26 @@ def assignment_to_pivot(df, outfile = None):
                 tmp = [tmp]
             for coi in tmp:
                 if coi not in distinct_cois.keys():
-                    distinct_cois[coi] = []
-                distinct_cois[coi].append(tile)
+                    distinct_cois[coi] = {
+                        'sub_text': sub_text,
+                        'title': titles[coi],
+                        'area_text': texts[coi],
+                        'tiles': []
+                    }
+                distinct_cois[coi]['tiles'].append(tile)
+
         
         plan_ids = [f'{plan_id}-{d+1}' for d in distinct_cois.keys()]
-        acc = pd.DataFrame(index = plan_ids, columns = tiles)
+        acc = pd.DataFrame(index = plan_ids, columns = cols)
         for (d, p) in zip(distinct_cois.keys(), plan_ids):
-            for t in distinct_cois[d]:
+            acc.at[p, 'submission_text'] = distinct_cois[d]['sub_text']
+            acc.at[p, 'area_text'] = distinct_cois[d]['area_text']
+            acc.at[p, 'area_name'] = distinct_cois[d]['title']
+            for t in distinct_cois[d]['tiles']:
                 acc.at[p, t] = 1
         pivot = pivot.append(acc)
         
     pivot = pivot.fillna(0)
-    pivot = pivot.T
     if outfile:
         pivot.to_csv(outfile)
     return pivot
