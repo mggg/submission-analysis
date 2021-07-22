@@ -35,9 +35,9 @@ def assignment_to_pivot(df, outfile = None):
         
     # download appropriate shape
     if unit == "blockgroups":
-        link = f'https://www2.census.gov/geo/pvs/tiger2010st/{fips}_{state}/{fips}/tl_2010_{fips}_bg10.zip'
+        link = f'https://www2.census.gov/geo/pvs/tiger2010st/{fips}_{state.replace(" ", "_")}/{fips}/tl_2010_{fips}_bg10.zip'
     elif unit == "blocks":
-        link = f'https://www2.census.gov/geo/pvs/tiger2010st/{fips}_{state}/{fips}/tl_2010_{fips}_tabblock10.zip'
+        link = f'https://www2.census.gov/geo/pvs/tiger2010st/{fips}_{state.replace(" ", "_")}/{fips}/tl_2010_{fips}_tabblock10.zip'
     else:
         link = coi_maps.mggg_states[state]
     shp = gpd.read_file(link)
