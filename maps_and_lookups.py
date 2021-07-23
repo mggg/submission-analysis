@@ -43,8 +43,10 @@ to_draw = {
                   ('/shp/Wisconsin/RiverFalls-EauClaire.shp', 'riverfalls_eauclaire', 'River Falls - Eau Claire'),
                   ('/shp/Wisconsin/SouthwestWisconsin.shp', 'southwest_wisconsin', 'Southwest Wisconsin')],
     "Texas": [('statewide', 'texas', "Texas"),
-               ('/shp/Texas/houston.shp', 'houston', "Houston")],
-    "New Mexico": [('statewide', 'newmexico', "New Mexico")],
+               ('/shp/Texas/houston.shp', 'houston', "Houston"),
+               ('/shp/Texas/Rowlett.shp', 'rowlett', 'Rowlett')],
+    "New Mexico": [('statewide', 'newmexico', "New Mexico"),
+                   ('/shp/New Mexico/Albuquerque.shp', 'albuquerque', 'Albuquerque')],
 
 
 
