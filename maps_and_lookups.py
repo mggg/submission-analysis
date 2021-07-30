@@ -44,8 +44,11 @@ to_draw = {
                   ('/shp/Wisconsin/SouthwestWisconsin.shp', 'southwest_wisconsin', 'Southwest Wisconsin'),
                   ('/shp/Wisconsin/WIDaneCo.shp', 'dane_county', 'Dane County')],
     "Texas": [('statewide', 'texas', "Texas"),
-               ('/shp/Texas/houston.shp', 'houston', "Houston"),
-               ('/shp/Texas/Rowlett.shp', 'rowlett', 'Rowlett')],
+               ('/shp/Texas/Houston.shp', 'houston', "Houston"),
+               ('/shp/Texas/Austin.shp', 'austin', 'Austin'),
+               ('/shp/Texas/Corpus Christi.shp', 'corpuschristi', 'Corpus Christi'),
+               ('/shp/Texas/Dallas-FT.shp', 'Dallas', 'Dallas'),
+               ('/shp/Texas/San Antonio.shp', 'sanantonio', 'San Antonio')],
     "New Mexico": [('statewide', 'newmexico', "New Mexico"),
                    ('/shp/New Mexico/Albuquerque.shp', 'albuquerque', 'Albuquerque')],
 
