@@ -31,26 +31,26 @@ to_draw = {
     # "Missouri": [('statewide', 'missouri', "Missouri"),
     #               ('/shp/Missouri/St_Louis_area.shp', 'stlouis', 'St. Louis'),
     #               ('/shp/Missouri/Kansas_City_area.shp', 'kansascity', 'Kansas City')],
-    # "Ohio": [('statewide', 'ohio', 'Ohio'),
-    #          ('/shp/Ohio/akron-canton-youngstown.shp', 'akron-canton-youngstown', 'Akron-Canton-Youngstown'),
-    #          ('/shp/Ohio/cleveland-northeastohio.shp', 'cleveland-northeastohio', 'Cleveland-Northeast Ohio'),
-    #          ('/shp/Ohio/northwestohio.shp', 'northwestohio', 'Northwest Ohio'),
-    #          ('/shp/Ohio/appalachiaohio.shp', 'appalachiaohio', 'Appalachian Ohio'),
-    #          ('/shp/Ohio/columbus-centralohio.shp', 'columbus-centralohio', 'Columbus-Central Ohio'),
-    #          ('/shp/Ohio/southwestohio.shp', 'southwestohio', 'Southwest Ohio')],
+    "Ohio": [('statewide', 'ohio', 'Ohio'),
+             ('/shp/Ohio/akron-canton-youngstown.shp', 'akron-canton-youngstown', 'Akron-Canton-Youngstown'),
+             ('/shp/Ohio/cleveland-northeastohio.shp', 'cleveland-northeastohio', 'Cleveland-Northeast Ohio'),
+             ('/shp/Ohio/northwestohio.shp', 'northwestohio', 'Northwest Ohio'),
+             ('/shp/Ohio/appalachiaohio.shp', 'appalachiaohio', 'Appalachian Ohio'),
+             ('/shp/Ohio/columbus-centralohio.shp', 'columbus-centralohio', 'Columbus-Central Ohio'),
+             ('/shp/Ohio/southwestohio.shp', 'southwestohio', 'Southwest Ohio')],
     # "Wisconsin": [('statewide', 'wisconsin', "Wisconsin"),
     #               ('/shp/Wisconsin/greatermilwaukee.shp', 'milwaukee', 'Greater Milwaukee'),
     #               ('/shp/Wisconsin/RiverFalls-EauClaire.shp', 'riverfalls_eauclaire', 'River Falls - Eau Claire'),
     #               ('/shp/Wisconsin/SouthwestWisconsin.shp', 'southwest_wisconsin', 'Southwest Wisconsin'),
     #               ('/shp/Wisconsin/WIDaneCo.shp', 'dane_county', 'Dane County')],
-    "Texas": [('statewide', 'texas', "Texas"),
-               ('/shp/Texas/Houston.shp', 'houston', "Houston"),
-               ('/shp/Texas/Austin.shp', 'austin', 'Austin'),
-               ('/shp/Texas/Corpus Christi.shp', 'corpuschristi', 'Corpus Christi'),
-               ('/shp/Texas/Dallas-FT.shp', 'Dallas', 'Dallas'),
-               ('/shp/Texas/San Antonio.shp', 'sanantonio', 'San Antonio')],
-    "New Mexico": [('statewide', 'newmexico', "New Mexico"),
-                   ('/shp/New Mexico/Albuquerque.shp', 'albuquerque', 'Albuquerque')],
+    # "Texas": [('statewide', 'texas', "Texas"),
+    #            ('/shp/Texas/Houston.shp', 'houston', "Houston"),
+    #            ('/shp/Texas/Austin.shp', 'austin', 'Austin'),
+    #            ('/shp/Texas/Corpus Christi.shp', 'corpuschristi', 'Corpus Christi'),
+    #            ('/shp/Texas/Dallas-FT.shp', 'Dallas', 'Dallas'),
+    #            ('/shp/Texas/San Antonio.shp', 'sanantonio', 'San Antonio')],
+    # "New Mexico": [('statewide', 'newmexico', "New Mexico"),
+    #                ('/shp/New Mexico/Albuquerque.shp', 'albuquerque', 'Albuquerque')],
 
 
 
@@ -87,8 +87,8 @@ def create_coi_maps(state, data):
     _, coi_df, _ = fetch.submissions(ids, plan, cois, written)
 
     # Need to drop these in Ohio for now
-    if state == "Ohio":
-        coi_df = coi_df.drop(coi_df[coi_df["first"] == "OOC"].index)
+    # if state == "Ohio":
+    #     coi_df = coi_df.drop(coi_df[coi_df["first"] == "OOC"].index)
 
     monday = most_recent_monday(np.datetime64('today'))
     textfile = open(f"./{state.lower().replace(' ', '')}/{state.lower().replace(' ', '')}_info_{monday}.txt", "w")
