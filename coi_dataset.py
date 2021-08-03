@@ -103,8 +103,8 @@ def assignment_to_pivot(df, outfile = None):
                 if coi not in distinct_cois.keys():
                     distinct_cois[coi] = {
                         'sub_text': sub_text,
-                        'title': titles[coi],
-                        'area_text': texts[coi],
+                        'title': titles[coi] if coi in titles else "",
+                        'area_text': texts[coi] if coi in texts else "",
                         'tiles': []
                     }
                 distinct_cois[coi]['tiles'].append(tile)

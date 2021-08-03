@@ -242,7 +242,7 @@ def plot_coi_heatmap(coi_df, clip_bounds, color = 'purple', osm = False, outfile
     fig, ax = plt.subplots(figsize = (20,10))
     ax.set_axis_off()
     clip_bounds.boundary.plot(ax = ax, color = 'black', linewidth = 2)
-    clipped.plot(ax = ax, color = color, alpha = 0.2)
+    clipped.plot(ax = ax, color = color, alpha = 0.05)
     if osm:
         try:
             ctx.add_basemap(ax, alpha = 0.5)
