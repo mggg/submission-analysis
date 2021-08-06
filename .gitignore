@@ -1,0 +1,6 @@
+*.ipynb
+__pycache__/
+test/
+2021-*
+shp/
+logs.txt
