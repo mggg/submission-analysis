@@ -155,7 +155,7 @@ def plot_coi_boundaries(coi_df, clip_bounds,
                         writer = None, weekly = False, monday = None):
     statewide = isinstance(clip_bounds, str)
     if statewide:
-        state_gdf = gpd.read_file('https://www2.census.gov/geo/tiger/GENZ2018/shp/cb_2018_us_state_5m.zip')
+        state_gdf = gpd.read_file('../shp/statewide/tl_2020_us_state.shp')
         clip_bounds = state_gdf[state_gdf['NAME'] == clip_bounds]
     clip_bounds = clip_bounds.to_crs(coi_df.crs)
     if osm:
@@ -216,7 +216,7 @@ def plot_coi_boundaries(coi_df, clip_bounds,
 def plot_coi_heatmap(coi_df, clip_bounds, color = 'purple', osm = False, outfile = None, show = True, title = None):
     statewide = isinstance(clip_bounds, str)
     if statewide:
-        state_gdf = gpd.read_file('https://www2.census.gov/geo/tiger/GENZ2018/shp/cb_2018_us_state_5m.zip')
+        state_gdf = gpd.read_file('../shp/statewide/tl_2020_us_state.shp')
         clip_bounds = state_gdf[state_gdf['NAME'] == clip_bounds]
     clip_bounds = clip_bounds.to_crs(coi_df.crs)
     if osm:
