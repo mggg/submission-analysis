@@ -1,147 +1,147 @@
-index,chunk,count
-0,market,203
-1,school,160
-2,media market,155
-3,school district,108
-4,student,106
-5,housing,78
-6,interview,74
-7,refugee,62
-8,service,58
-9,park,57
-10,immigrant,56
-11,child,54
-13,generation,52
-14,campus,52
-16,land,50
-19,shopping,46
-21,business,45
-22,violence,45
-23,family,44
-25,print media,42
-26,sport team,42
-27,water,41
-28,kid,37
-29,race,35
-30,library,34
-31,street,31
-33,settlement,30
-34,religion,30
-36,majority,29
-37,watershed,28
-38,nature,28
-39,ethnicity,28
-41,breakdown,28
-43,employer,27
-44,immigration status,27
-45,origin,27
-46,education,26
-47,recreation,25
-49,band,25
-50,youth,25
-51,pothole,25
-52,suburb,24
-55,metro,23
-56,transportation,23
-58,media market,23
-61,aapi community,23
-65,visibility,23
-66,language dialect,23
-67,refugee settlement,23
-68,class neighborhood,23
-69,migration,23
-71,interviewee,23
-72,language barrier,23
-74,inhibitor,23
-75,distribution,22
-76,volunteer,22
-77,downtown,22
-78,church,22
-81,hospital,21
-82,diversity,21
-84,opportunity,21
-85,gas station,21
-87,reference,21
-88,tv station,21
-89,news coi,21
-90,decline,21
-91,tv market,21
-92,health education institution,21
-93,turf,21
-94,outlet,21
-96,state medium market,21
-97,weather forecast,21
-98,health system,21
-99,metro area,21
-100,college,20
-101,restaurant,20
-102,policing,20
-103,river watershed,20
-104,descent,20
-105,village,19
-106,healthcare,19
-107,tourism,19
-108,farmer,19
-110,professional,19
-111,health,18
-112,access,18
-113,lake,17
-114,river,17
-115,safety,17
-118,development,16
-119,space,16
-120,crime,16
-121,tourist attraction,16
-122,healthcare delivery,16
-123,convenience,16
-125,message,16
-126,highway,15
-127,trash,15
-128,renter,15
-129,weather pattern,15
-132,corner,14
-133,reservation,14
-134,industry,14
-135,food,14
-136,tradition,14
-137,grocery store,14
-138,plant,14
-139,water quality,14
-140,language,14
-141,speeding,14
-142,light,14
-143,military,14
-144,planet,14
-145,bike,13
-146,favor,13
-148,music,13
-149,biking,13
-150,homeowner,13
-151,terrain,12
-152,trail,12
-153,employment,12
-156,aapi,12
-157,ice cave,12
-158,school system,11
-159,income,11
-160,program,11
-161,food desert,11
-162,poverty,11
-163,activist,11
-164,store,11
-165,drug,11
-169,respect,10
-170,hub,10
-171,geology,10
-172,heart,10
-173,police,10
-174,visitor,10
-175,island,10
-176,farm,10
-177,fish,10
-178,shore,10
-179,mining,10
-180,website,10
-181,refugee family,10
-184,folx,10
-185,lip,10
+chunk,count
+market,203
+school,160
+media market,155
+school district,108
+student,106
+housing,78
+interview,74
+refugee,62
+service,58
+park,57
+immigrant,56
+child,54
+generation,52
+campus,52
+land,50
+shopping,46
+business,45
+violence,45
+family,44
+print media,42
+sport team,42
+water,41
+kid,37
+race,35
+library,34
+street,31
+settlement,30
+religion,30
+majority,29
+watershed,28
+nature,28
+ethnicity,28
+breakdown,28
+employer,27
+immigration status,27
+origin,27
+education,26
+recreation,25
+band,25
+youth,25
+pothole,25
+suburb,24
+metro,23
+transportation,23
+media market,23
+aapi community,23
+visibility,23
+language dialect,23
+refugee settlement,23
+class neighborhood,23
+migration,23
+interviewee,23
+language barrier,23
+inhibitor,23
+distribution,22
+volunteer,22
+downtown,22
+church,22
+hospital,21
+diversity,21
+opportunity,21
+gas station,21
+reference,21
+tv station,21
+news coi,21
+decline,21
+tv market,21
+health education institution,21
+turf,21
+outlet,21
+state medium market,21
+weather forecast,21
+health system,21
+metro area,21
+college,20
+restaurant,20
+policing,20
+river watershed,20
+descent,20
+village,19
+healthcare,19
+tourism,19
+farmer,19
+professional,19
+health,18
+access,18
+lake,17
+river,17
+safety,17
+development,16
+space,16
+crime,16
+tourist attraction,16
+healthcare delivery,16
+convenience,16
+message,16
+highway,15
+trash,15
+renter,15
+weather pattern,15
+corner,14
+reservation,14
+industry,14
+food,14
+tradition,14
+grocery store,14
+plant,14
+water quality,14
+language,14
+speeding,14
+light,14
+military,14
+planet,14
+bike,13
+favor,13
+music,13
+biking,13
+homeowner,13
+terrain,12
+trail,12
+employment,12
+aapi,12
+ice cave,12
+school system,11
+income,11
+program,11
+food desert,11
+poverty,11
+activist,11
+store,11
+drug,11
+respect,10
+hub,10
+geology,10
+heart,10
+police,10
+visitor,10
+island,10
+farm,10
+fish,10
+shore,10
+mining,10
+website,10
+refugee family,10
+folx,10
+lip,10
