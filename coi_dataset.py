@@ -89,8 +89,8 @@ def assignment_to_pivot(df, outfile = None):
 
         sub_text = row['text']
         parts = row['districtr_data']['plan']['parts']
-        texts = {p['id']: p['name'] for p in parts}
-        titles = {p['id']: (p['description'] if 'description' in p else "") for p in parts}
+        titles = {p['id']: p['name'] for p in parts}
+        texts = {p['id']: (p['description'] if 'description' in p else "") for p in parts}
 
         # make lists
         assigned = asn.keys()
