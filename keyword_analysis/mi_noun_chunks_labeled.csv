@@ -1,0 +1,387 @@
+chunk,count,stop,justification
+district,2333,y,generic term
+community,2071,y,generic geographic term
+area,1055,y,generic geographic term
+interest,1027,y,generic political term
+county,1018,y,generic geographic term
+city,687,y,generic geographic term
+map,646,y,generic geographic term
+people,585,y,generic term
+resident,441,y,generic geographic term
+population,432,y,generic term
+state,381,y,generic geographic term
+representation,327,y,generic political term
+township,301,y,generic geographic term
+voter,284,y,generic political term
+time,266,y,generic term
+party,253,y,generic political term
+commission,252,y,generic political term
+line,210,y,generic geographic term
+need,207,y,generic term
+work,200,y,generic term
+boundary,197,y,generic geographic term
+redistricting,193,y,generic political term
+representative,191,y,generic political term
+way,190,y,generic term
+service,185,,
+school,180,,
+citizen,179,y,generic political term
+election,170,y,generic political term
+issue,169,y,generic term
+concern,168,y,generic term
+comment,161,y,generic term
+region,160,y,generic geographic term
+gerrymandering,159,y,generic political term
+family,155,,
+voice,155,y,generic term
+town,154,y,generic geographic term
+sense,151,y,generic term
+business,137,,
+seat,134,y,generic political term
+consideration,133,y,generic term
+vote,128,Y,generic political term
+plan,127,y,generic political term
+school district,126,,
+member,126,y,generic political term
+life,124,y,generic term
+number,122,y,generic term
+group,122,y,generic term
+candidate,116,y,generic political term
+opportunity,114,,
+majority,111,,
+corridor,109,,
+suburb,108,,
+home,108,y,generic term
+example,105,y,generic term
+criterion,104,y,generic term
+border,104,y,generic geographic term
+neighborhood,104,y,generic geographic term
+reason,102,y,generic term
+government,100,y,generic political term
+place,92,y,generic term
+resource,91,y,generic term
+thing,91,y,generic term
+history,88,y,generic term
+district line,88,y,generic geographic term
+neighbor,85,y,generic term
+job,82,y,generic term
+idea,81,y,generic term
+state district,81,y,generic geographic term
+process,81,y,generic term
+effort,80,y,generic term
+municipality,80,y,generic geographic term
+part,79,y,generic term
+road,79,,
+portion,78,y,generic term
+democracy,78,y,generic political term
+testimony,75,y,generic political term
+lot,74,y,generic term
+child,73,,
+value,70,y,generic term
+official,69,y,generic political term
+shopping,69,,
+person,67,y,generic term
+county line,66,y,generic geographic term
+access,66,,
+student,66,,
+system,65,y,generic term
+friend,63,y,generic term
+industry,63,,
+north,62,y,generic geographic term
+connection,62,,
+water,62,,
+view,62,y,generic term
+tie,61,y,generic political term
+goal,60,y,generic term
+task,60,y,generic term
+fairness,59,,
+order,58,y,generic term
+result,57,y,generic term
+lake,56,,
+tourism,56,,
+challenge,56,y,generic term
+education,55,,
+country,55,y,generic geographic term
+politician,54,y,generic political term
+meeting,53,y,generic political term
+rest,53,y,generic term
+point,53,y,generic term
+section,53,y,generic term
+hearing,53,y,generic political term
+end,52,y,generic term
+problem,52,y,generic term
+proposal,52,y,generic term
+shape,52,y,generic geographic term
+support,51,y,generic term
+race,51,,
+district map,51,y,generic geographic term
+organization,51,y,generic term
+location,51,y,generic term
+coi,51,y,generic political term
+event,50,y,generic term
+housing,50,,
+advantage,49,,
+east,49,y,generic geographic term
+activity,49,y,generic term
+power,49,,
+south,47,y,generic geographic term
+park,46,,
+airport,46,,
+share,46,y,generic term
+culture,46,,
+diversity,46,,
+fact,46,y,generic term
+watershed,45,,
+purpose,45,y,generic term
+hospital,45,,
+level,45,y,generic term
+office,45,y,generic political term
+priority,45,y,generic term
+datum,45,y,generic term
+difference,44,y,generic term
+voting district,44,y,generic political term
+experience,43,y,generic term
+farm,43,,
+law,42,y,generic political term
+submission,42,y,generic term
+term,42,y,generic term
+individual,42,y,generic term
+precinct,42,y,generic geographic term
+constituent,42,y,generic political term
+addition,41,y,generic term
+compactness,41,,
+redistricting process,41,y,generic political term
+suggestion,41,y,generic term
+decision,41,y,generic term
+change,40,y,generic term
+mind,40,y,generic term
+transportation,40,,
+districting,40,y,generic political term
+village,39,,
+husband,39,y,not interpretable
+politic,38,y,generic political term
+development,38,,
+downtown,38,,
+case,38,y,generic term
+agriculture,38,,
+land,37,,
+factor,37,y,generic term
+importance,37,y,generic term
+information,37,y,generic term
+church,37,,
+southwest,37,y,generic geographic term
+west,36,y,generic geographic term
+ability,36,y,generic term
+infrastructure,36,,
+shoreline,35,,
+regard,35,y,generic term
+class,35,,
+request,35,y,generic term
+basis,35,y,generic term
+ring suburb,35,,
+characteristic,34,y,generic term
+geography,34,y,generic geographic term
+opinion,34,y,generic term
+river,34,,
+thought,34,y,generic term
+bond,34,y,generic term
+district boundary,34,y,generic geographic term
+input,34,y,generic term
+relationship,33,y,generic term
+center,33,y,generic geographic term
+attention,33,y,generic term
+benefit,33,y,generic term
+farmer,33,,
+leader,33,y,generic term
+committee,33,y,generic political term
+policy,33,y,generic political term
+house,32,y,generic term
+economy,32,,
+color,32,y,generic term
+restaurant,32,,
+minority,32,,
+future,32,y,generic term
+block,31,y,generic term
+right,31,y,generic term
+college,31,,
+funding,31,,
+thank,31,y,not interpretable
+census,30,y,generic political term
+focus,30,Y,generic term
+chance,30,y,generic term
+worker,30,,
+commerce,30,,
+proximity,30,,
+sport,30,,
+folk,30,y,not interpretable
+recreation,30,,
+income,29,,
+attempt,29,y,generic term
+concept,29,y,generic term
+quality,29,y,generic term
+institution,29,y,generic political term
+nation,29,y,generic political term
+religion,29,,
+balance,28,,
+division,28,,
+kid,28,,
+speaker,27,,
+influence,27,y,generic term
+nature,27,,
+commissioner,27,y,generic political term
+makeup,26,,
+deviation,26,y,generic political term
+border county,26,,
+majority minority district,26,,
+requirement,26,y,generic term
+program,26,,
+entertainment,26,,
+redistricting plan,25,y,generic political term
+account,25,y,generic term
+identity,25,y,generic term
+belief,25,y,generic term
+care,25,y,generic term
+demographic,25,,
+state representative,25,y,generic political term
+link,24,,
+split,24,,
+world,24,Y,generic term
+desire,24,y,generic term
+state house district,24,y,generic political term
+growth,24,,
+variety,24,,
+ethnicity,24,,
+question,24,y,generic term
+school system,23,,
+metro area,23,,
+university,23,,
+corner,23,,
+health,23,,
+solution,23,y,generic term
+situation,23,y,generic term
+responsibility,23,y,generic term
+trail,23,,
+farming community,23,,
+southeast,23,y,generic term
+commonality,22,y,generic term
+environment,22,,
+method,22,y,generic term
+lifestyle,22,y,generic term
+similarity,22,y,generic term
+background,22,y,generic term
+extent,22,y,generic term
+s,22,y,not interpretable
+impact,22,y,generic term
+house district,22,y,generic political term
+unit,22,y,generic geographic term
+principle,22,y,generic term
+type,22,y,generic term
+manufacturing,22,,
+size,21,y,generic term
+street,21,,
+form,21,y,generic term
+amenity,21,,
+equity,21,,
+public,21,y,generic political term
+child care,21,,
+behalf,21,y,not interpretable
+project,21,y,generic term
+manner,21,y,generic term
+starting point,21,y,generic term
+incumbent,20,,
+news,20,y,generic term
+instance,20,y,generic term
+practice,20,y,generic term
+voting,20,y,generic political term
+ballot,20,y,generic political term
+character,20,y,generic term
+legislator,20,y,generic political term
+building,20,y,generic term
+lack,20,y,generic term
+county boundary,19,y,generic geographic term
+health care,19,,
+aspect,19,y,generic term
+hand,19,y,not interpretable
+travel,19,,
+doctor,19,,
+state senator,19,y,generic political term
+zip code,19,y,generic geographic term
+recommendation,19,y,generic term
+artery,19,,
+employment,19,,
+definition,19,y,generic term
+outcome,19,y,generic term
+dining,19,,
+choice,19,y,generic term
+intersection,19,y,generic term
+freeway,18,,
+employee,18,y,generic term
+neighboring county,18,,
+collaboration,18,y,generic term
+address,18,y,generic geographic term
+edge,18,y,generic term
+bias,18,y,generic term
+action,18,y,generic term
+legislature,18,,generic political term
+ring,18,,
+shore,18,,
+destination,18,,
+position,18,y,generic term
+teacher,18,,
+mapping,17,y,generic geographic term
+understanding,17,y,generic term
+immigrant,17,,
+commitment,17,y,generic term
+campus,17,,
+corporation,17,,
+integrity,17,,
+side,17,y,generic term
+facility,17,y,generic term
+control,17,y,generic term
+library,17,,
+parent,17,,
+standard,17,y,not interpretable
+page,17,,
+peninsula,16,,
+exception,16,y,generic term
+partnership,16,y,generic term
+jurisdiction,16,y,generic political term
+matter,16,y,generic term
+state level,16,y,generic political term
+legislation,16,y,generic political term
+board,16,y,generic political term
+course,16,y,generic term
+proportion,16,y,generic term
+amendment,16,y,generic political term
+year,16,y,generic term
+-countie,16,y,generic geographic term
+network,16,,
+cost,16,,
+detail,16,y,generic term
+broadband,16,,
+base,16,y,generic term
+generation,16,,
+class population,16,y,not interpretable
+police,16,,
+success,16,y,generic term
+entity,16,y,generic term
+constitution,15,y,generic political term
+existence,15,y,generic term
+electorate,15,y,generic political term
+guideline,15,y,generic political term
+route,15,,
+energy,15,,
+mean,15,y,not interpretable
+competitiveness,15,,
+property,15,,
+pandemic,15,,
+subdivision,15,,
+faith,15,,
+wife,15,y,not interpretable
+court,15,,
+safety,15,,
+site,15,y,generic term
+plant,15,,
+gerrymander,15,y,generic political term
+prison,15,,
+neighboring resident,15,,
