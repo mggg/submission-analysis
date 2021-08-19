@@ -4,7 +4,9 @@ import pandas as pd
 
 def test_join_area_text():
     # df = pd.read_csv("test_MI_data.csv")
-    df = coi_report.all_submissions_file_other("michigan")
+    # state = "michigan"
+    state = "wisconsin"    
+    df = coi_report.all_submissions_file_other(state)
     plans_df = df[df['type'] == "plan"]
     cois_df = df[df['type'] == "coi"]
     written_df = df[df['type'] == "written"]
@@ -24,7 +26,8 @@ def test_join_area_text():
     assert((len(multi) + len(single)) == len(cois_joined))
 
 def test_submissions_file_other():
-    state = "michigan"
+    # state = "michigan"
+    state = "wisconsin"    
     ids_url, plans_url, cois_url, written_url, subs = utils.submission_endpts(state)
     state = state.lower()
     if state == "michigan":
@@ -46,7 +49,8 @@ def test_submissions_file_other():
 
 def test_find_coi_subset():
     # df = pd.read_csv("test_MI_data.csv")
-    df = coi_report.all_submissions_file_other("michigan")
+    state = "michigan"
+    df = coi_report.all_submissions_file_other(state)
     cois_df = df[df['type'] == "coi"]
     UP_plan_ids = ["20348", "31207", "32661", "29545", "31223", "29749", "30771", "32594"]
     subset = coi_report.find_coi_subset(cois_df, UP_plan_ids)
@@ -54,7 +58,9 @@ def test_find_coi_subset():
 
 def test_find_pseudo_cois():
     # df = pd.read_csv("test_MI_data.csv")
-    df = coi_report.all_submissions_file_other("michigan")
+    # state = "michigan"
+    state = "wisconsin"    
+    df = coi_report.all_submissions_file_other(state)
     joined = coi_report.join_area_text(df)
     pseudo_cois = joined[joined['pseudo_coi'] == True]
     pseudo_df = coi_report.find_pseudo_cois(df)
