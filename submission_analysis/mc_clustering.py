@@ -112,37 +112,6 @@ def intracluster_score(dist_matrix: np.ndarray) -> ScoreFn:
     return score_fn
 
 
-def accept_1d(score: str,
-              beta: float,
-              flipped: bool = False) -> Callable[ChainState, Probability]:
-    """Creates an acceptance function based on a single score.
-
-    Let the improvement ratio m = (proposal score / current score)
-    (when `flipped` is `False`) or m = (current score / proposal score) (when
-    `flipped` is `True`). If m < 1, we accept with probability e^{-β / m}.
-    If m ≥ 1 (that is, we improve), we accept with probability 1.
-
-    :param score: Name of the score.
-    :param beta: Determines the propensity to reject (higher is pickier).
-    :param flipped: Determines the numerator/denominator direction in the
-    acceptance formula.
-    :return: Probability of acceptance (0-1).
-    """
-    def accept_fn(current: ChainState, proposed: ChainState) -> Probability:
-        if flipped:
-            m = proposed.scores[score] / current.scores[score]
-        else:
-            m = current.scores[score] / proposed.scores[score]
-        if m >= 1:
-            return 1.
-        return np.exp(-beta * m)
-
-    return accept_fn
-
-
-# In[8]:
-
-
 def accept_nd(scores: List[Tuple[str, bool]], beta: float) -> AcceptFn:
     """Creates an acceptance function based on a list of scores.
 
@@ -183,26 +152,28 @@ def cluster_size_soft_constraint(ideal_cluster_size: int) -> AcceptFn:
     return constraint_fn
 
 
-def geo_chain(distance_matrix: np.ndarray, beta: float, num_clusters: int,
-              length: int) -> MarkovChain:
-    """Creates a chain that minimizes intracluster geographical distances."""
+def chain_1d(distance_matrix: np.ndarray, label: str, flipped: bool,
+             beta: float, num_clusters: int, length: int) -> MarkovChain:
+    """Creates a chain that optimizes a single score."""
     num_docs = distance_matrix.shape[0]
-    score_fns = {'geo': intracluster_score(distance_matrix)}
-    accept_fn = accept_1d('geo', beta)
+    score_fns = {label: intracluster_score(distance_matrix)}
+    accept_fn = accept_nd([(label, flipped)], beta)
     soft_constraints = [cluster_size_soft_constraint(num_docs / num_clusters)]
     return MarkovChain(single_flip_proposal, score_fns, accept_fn,
                        soft_constraints, num_docs, num_clusters, length)
+
+
+def geo_chain(distance_matrix: np.ndarray, beta: float, num_clusters: int,
+              length: int) -> MarkovChain:
+    """Creates a chain that minimizes intracluster geographical distances."""
+    return chain_1d(distance_matrix, 'geo', False, beta, num_clusters, length)
 
 
 def semantic_chain(similarity_matrix: np.ndarray, beta: float,
                    num_clusters: int, length: int) -> MarkovChain:
     """Creates a chain that maximizes intracluster semantic similarities."""
-    num_docs = similarity_matrix.shape[0]
-    score_fns = {'semantic': intracluster_score(similarity_matrix)}
-    accept_fn = accept_1d('semantic', beta, flipped=True)
-    soft_constraints = [cluster_size_soft_constraint(num_docs / num_clusters)]
-    return MarkovChain(single_flip_proposal, score_fns, accept_fn,
-                       soft_constraints, num_docs, num_clusters, length)
+    return chain_1d(similarity_matrix, 'semantic', True, beta, num_clusters,
+                    length)
 
 
 def geo_semantic_chain(distance_matrix: np.ndarray,
