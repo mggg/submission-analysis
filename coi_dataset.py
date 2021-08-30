@@ -1,11 +1,10 @@
-import fetch
 import coi_maps
 import numpy as np
 import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import us
-import fetch
+import submission_analysis.fetch as fetch
 import contextily as ctx
 
 pref_units = {

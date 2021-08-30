@@ -1,4 +1,4 @@
-import fetch
+import submission_analysis.fetch as fetch
 
 def test_retrieve_submission_json():
     url = "https://o1siz7rw0c.execute-api.us-east-2.amazonaws.com/beta/submissions/districtr-ids/michigan"

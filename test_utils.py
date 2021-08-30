@@ -1,5 +1,5 @@
 import utils
-import fetch
+import submission_analysis.fetch as fetch
 
 def test_submission_endpts():
     ids_url, plans_url, cois_url, written_url, all_subs = utils.submission_endpts("michigan")

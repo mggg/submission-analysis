@@ -11,7 +11,7 @@ from pydantic import BaseModel
 from datetime import datetime as dt
 from datetime import timedelta
 from typing import Tuple
-import fetch
+import submission_analysis.fetch as fetch
 
 def all_submissions_df(state: str) -> pd.DataFrame:
     """ 

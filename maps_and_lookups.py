@@ -5,7 +5,7 @@ And also all the COI pivoted 1/0 csvs
 '''
 
 from matplotlib.pyplot import text
-import fetch
+import submission_analysis.fetch as fetch
 import coi_maps
 import coi_dataset
 import numpy as np
