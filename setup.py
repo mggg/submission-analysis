@@ -11,6 +11,7 @@ requirements = [
     "geopandas",
     "shapely",
     "matplotlib",
+    "pathos"
 ]
 
 setup(
