@@ -23,6 +23,10 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/mggg/GerryChain",
+    package_dir={
+        "submission_analysis": "submission_analysis",
+        "submission_analysis.ccdb": "submission_analysis/ccdb"
+    },
     packages=["submission_analysis", "submission_analysis.ccdb"],
     version="0.1.0",
     install_requires=requirements,
