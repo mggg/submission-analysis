@@ -11,10 +11,10 @@ ChainAssignment = Dict[int, int]
 Score = float
 Probability = float
 
-ProposalFn = Callable['ChainState', 'ChainState']
-ScoreFn = Callable['ChainState', Score]
-ConstraintFn = Callable['ChainState', Probability]
-AcceptFn = Callable[Tuple['ChainState', 'ChainState'], Probability]
+ProposalFn = Callable[['ChainState'], 'ChainState']
+ScoreFn = Callable[['ChainState'], Score]
+ConstraintFn = Callable[['ChainState'], Probability]
+AcceptFn = Callable[['ChainState', 'ChainState'], Probability]
 
 
 @dataclass(frozen=True)
