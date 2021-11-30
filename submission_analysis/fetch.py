@@ -29,6 +29,7 @@ def submissions(ids_url: str, plans_url: str, cois_url: str,
     calls for plans, cois, and written submissions, and retrieves filled pd ...
     dataframes for each submission type with metadata and districtr assignments
     """
+    print(f"Fetching submission ids from {ids_url}")
     submissions = retrieve_submission_ids_json(ids_url)
     submissions.sort(key=lambda x: str(x.id)) # sorts submission jsons by id
     plan_submissions = [sub.districtr_plan for sub in submissions #filters plan
@@ -85,10 +86,13 @@ def retrieve_submission_ids_json(url: str) -> list: #list: list[Submission]
     """
     # TODO: temp fix for the purposes of user-agent api call barrier
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.101 Safari/537.36'}  
+    print (f"Reading submission ids json from {url}")
     r = requests.get(url, headers=headers)
     subs_json = json.loads(r.text)
     submissions = []
+    print(f"Fetching plans for {len(subs_json['ids'])} plans")
     for ids in subs_json['ids']:
+        print('.', end="", flush=True)
         # Phase 1, retrieve link, id, type of plan
         plan_link = ids['link']
         plan_id = plan_link.split("/")[-1].split("?")[0]
@@ -97,6 +101,7 @@ def retrieve_submission_ids_json(url: str) -> list: #list: list[Submission]
         submissions.append(
                 Submission(link=plan_link, plan_type=plan_type,
                            id=plan_id, districtr_plan=plan_read(plan_id)))
+    print("")
     return submissions
 
 def csv_read(url: str) -> pd.DataFrame:
@@ -107,6 +112,7 @@ def csv_read(url: str) -> pd.DataFrame:
     """
     # TODO: temp fix for the purposes of user-agent api call barrier
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.101 Safari/537.36'}  
+    print (f"Reading csv from {url}")
     r = requests.get(url, headers=headers).content
     read_file = pd.read_csv(io.StringIO(r.decode('utf-8')))
     return read_file

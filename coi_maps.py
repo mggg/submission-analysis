@@ -27,7 +27,7 @@ mggg_states = {
     'Maine': 'https://github.com/mggg-states/ME-shapefiles/blob/master/Maine.zip?raw=true',
     'Pennsylvania': 'https://github.com/mggg-states/PA-shapefiles/blob/master/PA.zip?raw=true',
     'Louisiana': 'https://github.com/mggg-states/LA-shapefiles/blob/main/LA_1519.zip?raw=true',
-    'Minnesota': 'https://github.com/mggg-states/MN-shapefiles/blob/master/MN12_18.zip?raw=true',
+    'Minnesota': '../shp/Minnesota/mpls.zip',
     'Delaware': 'https://github.com/mggg-states/DE-shapefiles/blob/master/DE_precincts.zip?raw=true',
     'Arizona': 'https://github.com/mggg-states/AZ-shapefiles/blob/master/az_precincts.zip',
     'Connecticut': 'https://github.com/mggg-states/CT-shapefiles/blob/master/CT_precincts.zip?raw=true',
@@ -70,6 +70,7 @@ def assignment_to_shape(df):
             link = f'https://www2.census.gov/geo/pvs/tiger2010st/{fips}_{state.replace(" ", "_")}/{fips}/tl_2010_{fips}_tabblock10.zip'
         else:
             link = mggg_states[state]
+        print(f"Reading shapefile for {unit} from {link}")
         shp = gpd.read_file(link)
 
         # get everything into the same crs
