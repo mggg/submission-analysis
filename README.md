@@ -33,3 +33,16 @@ prod_API_KEY=DN.....
 ```
 python get_csv_reports.py qa minneapolis
 ```
+
+### Generating COI Heat maps
+Update `mggg_states` in `coi_maps.py` to indicate the current shapefile for the states of interests.  This shapefile
+has the components for the heatmaps.  It will need to have a GEOID20 column for current maps.
+
+Update `to_draw` in `maps_andlookups.py` to include the analysis and shapefiles for the organizations of interest. This shapefiles
+are the outer boundary of areas for COI analysis.
+
+Invoke maps_and_lookups.py, indicating envrionment and organizations.  For example, 
+
+```
+python maps_and_lookups.py prod Minneapolis Ohio
+```
