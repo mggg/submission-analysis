@@ -14,6 +14,9 @@ import sys
 import os
 import requests
 import json
+from fetch import submissions
+
+from submission_analysis.fetch import csv_read
 
 # %%
 def fetch_json(url: str, API_KEY: str) -> Any:
@@ -33,23 +36,41 @@ def fetch_json(url: str, API_KEY: str) -> Any:
 def get_portal_data(environment: str, organization: str) -> Tuple[pd.DataFrame,pd.DataFrame,pd.DataFrame,pd.DataFrame] :
   """
   Call portal API api that returns the submission, comments and their tags
-  Covert the result to Dataframes
+  Convert the result to Dataframes
   """
   if f'{environment}_API_KEY' not in os.environ:
     raise Exception(f'Please define {environment}_API_KEY environment variable.  Easiest to use a .env file')
   API_KEY = os.getenv(f'{environment}_API_KEY')
   ENDPOINTS = {
-    'qa': 'https://ik3ewh40tg.execute-api.us-east-2.amazonaws.com/qa',
-    'prod': 'https://k61e3cz2ni.execute-api.us-east-2.amazonaws.com/prod'
+    'qa': f'https://ik3ewh40tg.execute-api.us-east-2.amazonaws.com/qa/submissions/star/{organization}',
+    'prod': f'https://k61e3cz2ni.execute-api.us-east-2.amazonaws.com/prod/submissions/star/{organization}',
+    'main' : f'https://o1siz7rw0c.execute-api.us-east-2.amazonaws.com/prod/submissions/csv/michigan/star'
   }
   endpoint = ENDPOINTS[environment]
-  url = f"{endpoint}/submissions/star/{organization}" 
-  message = fetch_json(url, API_KEY)['message']
-  submissions_df = pd.DataFrame(message['submissions'])
-  comments_df = pd.DataFrame(message['comments'])
-  tags_df = pd.DataFrame(message['tags'])
-  commenttags_df = pd.DataFrame(message['commenttags'])
-  return (submissions_df, comments_df, tags_df, commenttags_df)
+  limit=1000
+  offset=0
+  done = False
+  all_records = {
+    'submissions': [],
+    'comments': [],
+    'tags': [],
+    'commenttags': []
+  }
+  while not done:
+    url = f'{endpoint}?offset={offset}&limit={limit}'
+    json = fetch_json(url, API_KEY)
+    message = json['message']
+    print(f"submissions {len(message['submissions'])} comments {len(message['comments'])}")
+    all_records['submissions'].extend(message['submissions'])
+    all_records['comments'].extend(message['comments'])
+    all_records['tags'].extend(message['tags'])
+    all_records['commenttags'].extend(message['commenttags'])
+    
+    if len(message['submissions']) ==0 and len(message['comments'])==0 and len(message['tags']) ==0 and len(message['commenttags'])==0:
+      done = True  
+    else:
+      offset = offset + limit
+  return all_records
 
 # %%
 def get_portal_data_and_generate_csvs(environment: str, organization: str) -> Tuple[pd.DataFrame,pd.DataFrame,pd.DataFrame,pd.DataFrame]:
@@ -58,42 +79,62 @@ def get_portal_data_and_generate_csvs(environment: str, organization: str) -> Tu
   """
   datestring = datetime.now(tz=timezone.utc).strftime('%Y-%m-%dT%H:%M')
 
-  dataframes = get_portal_data(environment, organization)
-  submissions_df, comments_df, tags_df, commenttags_df = dataframes
-  submission_cols = ['id', 'organization_id', 'title', 'type', 'text', 'link', 
+  json = get_portal_data(environment, organization)
+  print (json['comments'][0])
+  if organization == 'michigan':
+    submission_cols = ['id','title','type','text','link','salutation','first','last','email','city','state',
+    'zip','datetime','verified','key','sourceip','useragent','districttype','profanity','token','emailverified']
+  else:
+    submission_cols = ['id', 'organization_id', 'title', 'type', 'text', 'link', 
     'salutation', 'first', 'last', 'email', 'city', 'state', 'zip', 
     'datetime', 'hidden', 'emailverified', 
         'hasprofanity', 'districttype', 
         'contactable', 'phone', 'coalition', 'language', 'draft']
+  
+  if organization == 'michigan':
+    comment_cols = ['id','submission','text',
+      'salutation','first','last','email','city','state','zip',
+      'datetime','emailverified','profanity',
+      'draft'] 
+  else:
+    comment_cols = ['id','organization_id','submission','text',
+      'salutation','first','last','email','city','state','zip',
+      'datetime','emailverified','hidden','hasprofanity',
+      'contactable','phone','coalition','language','draft']
 
-  comment_cols = ['id','organization_id','submission','text',
-    'salutation','first','last','email','city','state','zip',
-    'datetime','emailverified','hidden','hasprofanity',
-    'contactable','phone','coalition','language','draft']
+ 
 
-  if len(submissions_df.index) ==0:
+  if len(json['submissions']) ==0:
     submissions_df = pd.DataFrame(columns=submission_cols)
-  submissions_df = submissions_df[submission_cols]
+  else:
+    submissions_df = pd.DataFrame(json['submissions'])[submission_cols]
 
   print("Hidden or unverified submissions")
   df = submissions_df
-  print(df[(df['hidden']==True) | (df['emailverified']==False) & ~df['type'].isin(['plan', 'coi'])])
+  if 'hidden' in df.columns:
+    print(df[(df['hidden']==True) | (df['emailverified']==False) & ~df['type'].isin(['plan', 'coi'])])
+  else:
+    print(df[(df['emailverified']==False) & ~df['type'].isin(['plan', 'coi'])])
 
-  file = f"{organization}_{environment}_CumulativeSubmissions_{datestring}.csv"
+  file = f"reports/{organization}_{environment}_CumulativeSubmissions_{datestring}.csv"
   submissions_df.to_csv(file)
   print(f"Wrote {len(submissions_df.index)} to {file}" )
 
-  if len(comments_df.index)==0:
+  if len(json['comments'])==0:
     comments_df = pd.DataFrame(columns=comment_cols)
-  comments_df = comments_df[comment_cols]
+  else:
+    comments_df = pd.DataFrame(json['comments'])[comment_cols]
   print("Hidden or unverified comments")
   df = comments_df
-  print(df[ (df['hidden']==True)  | (df['emailverified']==False) ])
+  if 'hidden' in df.columns:
+    print(df[ (df['hidden']==True)  | (df['emailverified']==False) ])
+  else:
+    print(df[(df['emailverified']==False) ])
 
-  file = f"{organization}_{environment}_CumulativeComments_{datestring}.csv"
+  file = f"reports/{organization}_{environment}_CumulativeComments_{datestring}.csv"
   comments_df.to_csv(file)
   print(f"Wrote {len(comments_df.index)} to {file}" )
-  return dataframes 
+  return json 
 
 
 
@@ -103,12 +144,13 @@ def get_portal_data_and_generate_csvs(environment: str, organization: str) -> Tu
 def usage():
   print (f"Usage: python get_csv_reports.py ENV ORGANIZATION")
   print (f"Ex:    python get_csv_reports.py qa ohio")
+  print (f"Ex:    python get_csv_reports.py main michigan")
 
 # %%
 if __name__ == "__main__" :
   load_dotenv()
   if  "ipykernel" in sys.argv[0]:
-    environment = 'prod'
+    environment = 'qa'
     organization = 'minneapolis'
   else:
     # Support running as a plain python script
@@ -118,9 +160,11 @@ if __name__ == "__main__" :
 
   # At this point, environment and organization should have been set 
   if environment and  organization:
-    dataframes = get_portal_data_and_generate_csvs(environment, organization)
+    json = get_portal_data_and_generate_csvs(environment, organization)
 
   else: 
     usage()
 
 
+
+# %%
