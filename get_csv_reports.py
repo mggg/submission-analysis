@@ -33,7 +33,7 @@ def fetch_json(url: str, API_KEY: str) -> Any:
   return json_struct
 # %%
 
-def get_portal_data(environment: str, organization: str) -> Dict :
+def get_portal_data_json(environment: str, organization: str) -> Dict :
   """
   Call portal API api that returns the submission, comments and their tags
   Convert the result to Dataframes
@@ -73,13 +73,12 @@ def get_portal_data(environment: str, organization: str) -> Dict :
   return all_records
 
 # %%
-def get_portal_data_and_generate_csvs(environment: str, organization: str):
+def get_portal_data_dataframes(environment: str, organization: str) -> Tuple[pd.DataFrame, pd.DataFrame]:
   """
   Get data from portal API and save as CSVs to local disk 
   """
-  datestring = datetime.now(tz=timezone.utc).strftime('%Y-%m-%dT%H:%M')
 
-  json = get_portal_data(environment, organization)
+  json = get_portal_data_json(environment, organization)
   if organization == 'michigan':
     submission_cols = ['id','title','type','text','link','salutation','first','last','email','city','state',
     'zip','datetime','verified','key','sourceip','useragent','districttype','profanity','token','emailverified']
@@ -101,13 +100,26 @@ def get_portal_data_and_generate_csvs(environment: str, organization: str):
       'datetime','emailverified','hidden','hasprofanity',
       'contactable','phone','coalition','language','draft']
 
- 
-
   if len(json['submissions']) ==0:
     submissions_df = pd.DataFrame(columns=submission_cols)
   else:
     submissions_df = pd.DataFrame(json['submissions'])[submission_cols]
 
+  if len(json['comments'])==0:
+    comments_df = pd.DataFrame(columns=comment_cols)
+  else:
+    comments_df = pd.DataFrame(json['comments'])[comment_cols]
+
+  return submissions_df, comments_df
+
+
+def get_portal_data_and_generate_csvs(environment: str, organization: str):
+  """
+  Get data from portal API and save as CSVs to local disk 
+  """
+  submissions_df, comments_df = get_portal_data_dataframes(environment, organization)
+  
+  ## Informational logging of unverified entries
   print("Hidden or unverified submissions")
   df = submissions_df
   if 'hidden' in df.columns:
@@ -115,20 +127,21 @@ def get_portal_data_and_generate_csvs(environment: str, organization: str):
   else:
     print(df[(df['emailverified']==False) & ~df['type'].isin(['plan', 'coi'])])
 
-  file = f"reports/{organization}_{environment}_CumulativeSubmissions_{datestring}.csv"
-  submissions_df.to_csv(file)
-  print(f"Wrote {len(submissions_df.index)} to {file}" )
 
-  if len(json['comments'])==0:
-    comments_df = pd.DataFrame(columns=comment_cols)
-  else:
-    comments_df = pd.DataFrame(json['comments'])[comment_cols]
   print("Hidden or unverified comments")
   df = comments_df
   if 'hidden' in df.columns:
     print(df[ (df['hidden']==True)  | (df['emailverified']==False) ])
   else:
     print(df[(df['emailverified']==False) ])
+
+
+  ### Write to disk
+  datestring = datetime.now(tz=timezone.utc).strftime('%Y-%m-%dT%H:%M')
+
+  file = f"reports/{organization}_{environment}_CumulativeSubmissions_{datestring}.csv"
+  submissions_df.to_csv(file)
+  print(f"Wrote {len(submissions_df.index)} to {file}" )
 
   file = f"reports/{organization}_{environment}_CumulativeComments_{datestring}.csv"
   comments_df.to_csv(file)
