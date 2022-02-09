@@ -18,9 +18,6 @@ import sys
 import os
 import requests
 import json
-from fetch import submissions
-
-from submission_analysis.fetch import csv_read
 
 # %%
 def fetch_json(url: str, API_KEY: str) -> Dict:
