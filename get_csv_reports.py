@@ -7,7 +7,7 @@ organization and generate reports.
 # %%
 # from os import environ
 from datetime import datetime, timezone
-from typing import Any, Tuple
+from typing import Any, Dict, Tuple
 import pandas as pd
 from dotenv import load_dotenv
 import sys
@@ -33,7 +33,7 @@ def fetch_json(url: str, API_KEY: str) -> Any:
   return json_struct
 # %%
 
-def get_portal_data(environment: str, organization: str) -> Tuple[pd.DataFrame,pd.DataFrame,pd.DataFrame,pd.DataFrame] :
+def get_portal_data(environment: str, organization: str) -> Dict :
   """
   Call portal API api that returns the submission, comments and their tags
   Convert the result to Dataframes
@@ -73,14 +73,13 @@ def get_portal_data(environment: str, organization: str) -> Tuple[pd.DataFrame,p
   return all_records
 
 # %%
-def get_portal_data_and_generate_csvs(environment: str, organization: str) -> Tuple[pd.DataFrame,pd.DataFrame,pd.DataFrame,pd.DataFrame]:
+def get_portal_data_and_generate_csvs(environment: str, organization: str):
   """
   Get data from portal API and save as CSVs to local disk 
   """
   datestring = datetime.now(tz=timezone.utc).strftime('%Y-%m-%dT%H:%M')
 
   json = get_portal_data(environment, organization)
-  print (json['comments'][0])
   if organization == 'michigan':
     submission_cols = ['id','title','type','text','link','salutation','first','last','email','city','state',
     'zip','datetime','verified','key','sourceip','useragent','districttype','profanity','token','emailverified']
@@ -134,7 +133,6 @@ def get_portal_data_and_generate_csvs(environment: str, organization: str) -> Tu
   file = f"reports/{organization}_{environment}_CumulativeComments_{datestring}.csv"
   comments_df.to_csv(file)
   print(f"Wrote {len(comments_df.index)} to {file}" )
-  return json 
 
 
 
@@ -160,7 +158,7 @@ if __name__ == "__main__" :
 
   # At this point, environment and organization should have been set 
   if environment and  organization:
-    json = get_portal_data_and_generate_csvs(environment, organization)
+    get_portal_data_and_generate_csvs(environment, organization)
 
   else: 
     usage()
