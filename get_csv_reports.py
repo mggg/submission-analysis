@@ -1,6 +1,11 @@
 """
 Notebook/script to retrieve data from portal for an
-organization and generate reports.
+organization and generate reports. 
+This retrieve personal information.  
+It also includes submissions and comments that are hidden or no verified.
+This full set of data should only be provided to the
+customer through secure channels and with appropriate caveats.
+
 """
 
 # %%
@@ -18,7 +23,7 @@ from fetch import submissions
 from submission_analysis.fetch import csv_read
 
 # %%
-def fetch_json(url: str, API_KEY: str) -> Any:
+def fetch_json(url: str, API_KEY: str) -> Dict:
     """
   Retrieve json from a url, passing an AWS API_KEY
   """
@@ -49,6 +54,8 @@ def get_portal_data_json(environment: str, organization: str) -> Dict:
         "main": f"https://o1siz7rw0c.execute-api.us-east-2.amazonaws.com/prod/submissions/star/michigan",
     }
     endpoint = ENDPOINTS[environment]
+    # Use paging API to get a bunch of records at a time until
+    # we get an empty set of records.
     limit = 1000
     offset = 0
     done = False
@@ -193,6 +200,7 @@ def get_portal_data_dataframes(
     if "hidden" not in comments_df.columns:
       comments_df["hidden"] = False
 
+    # The Michigan DB calls the column called 'profanity' instead of 'hasprofanity'
     if "profanity" in submissions_df.columns:
       submissions_df = submissions_df.rename(columns={"profanity": "hasprofanity"})
     if "profanity" in comments_df.columns:
@@ -207,7 +215,7 @@ def get_portal_data_and_generate_csvs(environment: str, organization: str):
   """
     submissions_df, comments_df = get_portal_data_dataframes(environment, organization)
 
-    ## Informational logging of unverified entries
+    ## Informational logging of unverified/hidden entries
     df = submissions_df[
                 (submissions_df["hidden"] == True)
                 | (submissions_df["emailverified"] == False) & ~submissions_df["type"].isin(["plan", "coi"])
@@ -225,11 +233,11 @@ def get_portal_data_and_generate_csvs(environment: str, organization: str):
     file = (
         f"reports/{organization}_{environment}_CumulativeSubmissions_{datestring}.csv"
     )
-    submissions_df.to_csv(file,index=False)
+    submissions_df.sort_values(by="id").to_csv(file,index=False)
     print(f"Wrote {len(submissions_df.index)} to {file}")
 
     file = f"reports/{organization}_{environment}_CumulativeComments_{datestring}.csv"
-    comments_df.to_csv(file, index=False)
+    comments_df.sort_values(by="id").to_csv(file, index=False)
     print(f"Wrote {len(comments_df.index)} to {file}")
 
 
@@ -237,6 +245,7 @@ def get_portal_data_and_generate_csvs(environment: str, organization: str):
 def usage():
     print(f"Usage: python get_csv_reports.py ENV ORGANIZATION")
     print(f"Ex:    python get_csv_reports.py qa ohio")
+    print(f"Ex:    python get_csv_reports.py prod ohio")
     print(f"Ex:    python get_csv_reports.py main michigan")
 
 
