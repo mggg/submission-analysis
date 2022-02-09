@@ -44,7 +44,7 @@ def get_portal_data(environment: str, organization: str) -> Tuple[pd.DataFrame,p
   ENDPOINTS = {
     'qa': f'https://ik3ewh40tg.execute-api.us-east-2.amazonaws.com/qa/submissions/star/{organization}',
     'prod': f'https://k61e3cz2ni.execute-api.us-east-2.amazonaws.com/prod/submissions/star/{organization}',
-    'main' : f'https://o1siz7rw0c.execute-api.us-east-2.amazonaws.com/prod/submissions/csv/michigan/star'
+    'main' : f'https://o1siz7rw0c.execute-api.us-east-2.amazonaws.com/prod/submissions/star/michigan'
   }
   endpoint = ENDPOINTS[environment]
   limit=1000
