@@ -15,7 +15,8 @@ pref_units = {
     "Texas": 'precincts',
     "Utah": 'blocks',
     "Virginia": 'precincts',
-    "Wisconsin": 'wards'
+    "Wisconsin": 'wards',
+    "Minnesota": 'blocks'
 }
 
 def assignment_to_pivot(df, outfile = None):

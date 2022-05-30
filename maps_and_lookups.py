@@ -14,7 +14,7 @@ import geopandas as gpd
 import os
 import copy
 import datetime
-
+from pathlib import Path
 
 ##### THINGS TO CHANGE ######
 to_draw = {
@@ -29,12 +29,13 @@ to_draw = {
                  ('/shp/Michigan/traverse_city.shp', 'traverse_city', 'Traverse City'),
                  ('/shp/Michigan/northern_michigan.shp', 'northern_michigan', 'Northern Michigan')],
     "Missouri": [('statewide', 'missouri', "Missouri"),
-                  ('/shp/Missouri/St_Louis_MO.shp', 'stlouis', 'St. Louis'),
-                  ('/shp/Missouri/Kansas_City_MO.shp', 'kansascity', 'Kansas City'),
-                  ('/shp/Missouri/Springfield_MO.shp', 'springfield', 'Springfield'),
-                  ('/shp/Missouri/Jefferson_City_MO.shp', 'jeffersoncity', 'Jefferson City'),
-                  ('/shp/Missouri/Columbia_MO.shp', 'columbia', 'Columbia'),],
-    "Ohio": [('statewide', 'ohio', 'Ohio')
+#                  ('/shp/Missouri/St_Louis_MO.shp', 'stlouis', 'St. Louis'),
+#                  ('/shp/Missouri/Kansas_City_MO.shp', 'kansascity', 'Kansas City'),
+#                  ('/shp/Missouri/Springfield_MO.shp', 'springfield', 'Springfield'),
+#                  ('/shp/Missouri/Jefferson_City_MO.shp', 'jeffersoncity', 'Jefferson City'),
+#                  ('/shp/Missouri/Columbia_MO.shp', 'columbia', 'Columbia'),
+    ],
+    "Ohio": [('statewide', 'ohio', 'Ohio'),
              ('/shp/Ohio/akron-canton-youngstown.shp', 'akron-canton-youngstown', 'Akron-Canton-Youngstown'),
              ('/shp/Ohio/cleveland-northeastohio.shp', 'cleveland-northeastohio', 'Cleveland-Northeast Ohio'),
              ('/shp/Ohio/northwestohio.shp', 'northwestohio', 'Northwest Ohio'),
@@ -55,7 +56,7 @@ to_draw = {
     "New Mexico": [('statewide', 'newmexico', "New Mexico"),
                    ('/shp/New Mexico/Albuquerque.shp', 'albuquerque', 'Albuquerque')],
 
-
+    "Minneapolis": [('/shp/Minnesota/Minneapolis_boundary.shp', 'minneapolis', 'Minneapolis')]
 
     # Forthcoming
     # "Florida": ('statewide', 'florida', 'Florida'),
@@ -64,19 +65,11 @@ to_draw = {
 
 ## actual code
 # data is list of (geom, outfile) tuples
-def create_coi_maps(state, data):
+def create_coi_maps(environment: str, state: str, data):
     if not isinstance(data, list):
         data = [data]
-    link = state.lower().replace(" ", "")
     print(f'----------- {state} -------------')
     print(f'{len(data)} set(s) to print in {state}')
-
-
-    # read the COI dataframe
-    ids = f"https://k61e3cz2ni.execute-api.us-east-2.amazonaws.com/prod/submissions/districtr-ids/{link}"
-    plan = f"https://k61e3cz2ni.execute-api.us-east-2.amazonaws.com/prod/submissions/csv/{link}?type=plan&length=10000"
-    cois = f"https://k61e3cz2ni.execute-api.us-east-2.amazonaws.com/prod/submissions/csv/{link}?type=coi&length=10000"
-    written = f"https://k61e3cz2ni.execute-api.us-east-2.amazonaws.com/prod/submissions/csv/{link}?type=written&length=10000"
 
     if state == 'Michigan':
         ids = "https://o1siz7rw0c.execute-api.us-east-2.amazonaws.com/beta/submissions/districtr-ids/michigan"
@@ -84,9 +77,20 @@ def create_coi_maps(state, data):
         plan = csv_url + "?type=plan&length=10000"
         cois = csv_url + "?type=coi&length=10000"
         written = csv_url + "?type=written&length=10000"
-
+    else:
+        ENDPOINTS = {
+            'qa': 'https://ik3ewh40tg.execute-api.us-east-2.amazonaws.com/qa',
+            'prod': 'https://k61e3cz2ni.execute-api.us-east-2.amazonaws.com/prod'
+        }
+        endpoint = ENDPOINTS[environment]
+        link = state.lower().replace(" ", "")
+        ids = f"{endpoint}/submissions/districtr-ids/{link}"
+        plan = f"{endpoint}/submissions/csv/{link}?type=plan&length=10000"
+        cois = f"{endpoint}/submissions/csv/{link}?type=coi&length=10000"
+        written = f"{endpoint}/submissions/csv/{link}?type=written&length=10000"
 
     
+    # read the COI dataframe
     _, coi_df, _ = fetch.submissions(ids, plan, cois, written)
 
     # Need to drop these in Ohio for now
@@ -161,15 +165,41 @@ def most_recent_monday(d):
     weekday = d.astype(datetime.datetime).isoweekday()
     return d - np.timedelta64(weekday - 1)
 
-def main():
+def usage():
+  print (f"Usage: python maps_and_lookups.py ENV ORGANIZATIONS")
+  print (f"Ex:    python maps_and_lookups.py prod Minneapolis Ohio")
+
+def main(environment, organization):
     monday = str(most_recent_monday(np.datetime64('today')))
-    os.mkdir(monday)
+    
+    Path(monday).mkdir(parents=True, exist_ok=True)
     os.chdir(monday)
-    os.mkdir("lookup_tables")
-    for s in to_draw.keys():
-        os.mkdir(s.lower().replace(" ", ""))
-        create_coi_maps(s, to_draw[s])
+    Path("lookup_tables").mkdir(parents=True, exist_ok=True)
+    
+    Path(organization.lower().replace(" ", "")).mkdir(parents=True, exist_ok=True)
+    create_coi_maps(environment, organization, to_draw[organization])
     os.chdir('..')
 
-if __name__ == "__main__":
-    main()
+if __name__ == "__main__" :
+    import sys
+    from dotenv import load_dotenv 
+    load_dotenv()
+    environment = None
+    organization = None
+    if  "ipykernel" in sys.argv[0]:
+        # Running on a notebook.  Change these to suite your needs    
+        environment = 'prod'
+        organization = 'minneapolis'
+    else:
+        # Support running as a plain python script
+        if len(sys.argv)>=2:
+            environment = sys.argv[1] 
+            organizations = sys.argv[2:]
+
+
+    # At this point, environment and organizations should have been set 
+    if environment and  organizations:
+        for organization in organizations:
+            main(environment, organization)
+    else: 
+        usage()    
