@@ -57,12 +57,13 @@ def get_portal_data_json(environment: str, organization: str) -> Dict:
     offset = 0
     done = False
     all_records = {"submissions": [], "comments": [], "tags": [], "commenttags": []}
+    page = 1
     while not done:
         url = f"{endpoint}?offset={offset}&limit={limit}"
         json = fetch_json(url, API_KEY)
         message = json["message"]
         print(
-            f"submissions {len(message['submissions'])} comments {len(message['comments'])}"
+            f"page {page} submissions {len(message['submissions'])} comments {len(message['comments'])}"
         )
         all_records["submissions"].extend(message["submissions"])
         all_records["comments"].extend(message["comments"])
@@ -78,6 +79,7 @@ def get_portal_data_json(environment: str, organization: str) -> Dict:
             done = True
         else:
             offset = offset + limit
+            page = page+1
     return all_records
 
 
